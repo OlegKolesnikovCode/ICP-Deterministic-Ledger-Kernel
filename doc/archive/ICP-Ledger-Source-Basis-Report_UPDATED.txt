@@ -1,0 +1,148 @@
+ICP Ledger Source-Basis Report
+
+Project: ICP Deterministic Ledger Kernel
+Purpose: Source-basis document for generating governed SRC-* files and downstream BLD-* implementation files.
+Status: Draft source-basis / extraction input. Not active governed source authority until converted into GOV-compliant JSONL records and activated by GOV-00 / SRC-INDEX.
+Source basis: Extends the uploaded ICP Ledger Correctness Kernel report.
+Update scope: Incorporates authority-status, routing-ownership, ICP caller identity, MVP scope, idempotency recovery, atomicity, canonical serialization, amount representation, upgrade safety, and BLD-precondition corrections.
+
+0. Report Purpose
+
+This document defines the missing source-basis material required to generate the following governed source files:
+
+SRC-INDEX__SOURCE_TRACEABILITY__LOOKUP_ROUTING.jsonl
+
+SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl
+SRC-01__CANISTER_AUTHORITY_MODEL__SOURCE__SYSTEM.jsonl
+SRC-02__DOMAIN_ENTITIES__SOURCE__SYSTEM.jsonl
+SRC-03__TRANSFER_OPERATION__SOURCE__SYSTEM.jsonl
+SRC-04__IDEMPOTENCY_REPLAY__SOURCE__SYSTEM.jsonl
+SRC-05__LEDGER_JOURNAL_INVARIANTS__SOURCE__SYSTEM.jsonl
+SRC-06__FAILURE_MODEL__SOURCE__SYSTEM.jsonl
+SRC-07__READ_MODEL_DERIVATION__SOURCE__SYSTEM.jsonl
+SRC-08__UPGRADE_SAFETY__SOURCE__SYSTEM.jsonl
+SRC-09__API_SURFACE_FORBIDDEN_APIS__SOURCE__SYSTEM.jsonl
+SRC-10__TEST_PROOF_REQUIREMENTS__SOURCE__SYSTEM.jsonl
+
+This report is not implementation guidance. It defines source-basis material for governed source extraction.
+
+This report is NOT itself an active governed source file unless converted into GOV-compliant JSONL records and activated by GOV-00 / SRC-INDEX.
+
+Implementation instructions belong in BLD-* files.
+
+0.1 Authority Classification
+
+BASIS-001:
+This document is SOURCE_BASIS / EXTRACTION_INPUT.
+
+BASIS-002:
+This report MUST NOT be treated as final active source authority until its rules are converted into GOV-compliant JSONL source records.
+
+BASIS-003:
+Generated SRC-* files MUST preserve traceability to the source-basis concepts in this report but MUST be governed by GOV-00 schema, authority, scope, and trace rules.
+
+BASIS-004:
+If this report conflicts with GOV-00, GOV-00 wins.
+
+BASIS-005:
+If generated SRC-* records conflict with this report, the generated SRC-* records are invalid unless the conflict is explicitly resolved by a higher-authority GOV/SRC rule.
+
+BASIS-006:
+This report MAY be cited as source-basis evidence but MUST NOT be used as a lower-friction substitute for governed JSONL source records.
+
+1. Normative Language
+Term	Meaning
+MUST	Required. Violation compromises the architecture.
+MUST NOT	Forbidden. Violation creates correctness risk.
+SHOULD	Strong recommendation. Deviate only with explicit justification.
+MAY	Optional. Not required for MVP.
+2. Source Extraction Map
+SRC File	Source Responsibility
+SRC-00	Project identity, thesis, scope, non-goals, default decisions, ADR ownership
+SRC-01	Canister authority model, trusted Gateway envelope, cross-canister correctness boundaries
+SRC-02	Domain entities, entity identity, account/asset/balance semantics, amount semantics
+SRC-03	Transfer operation requirements, operation lifecycle, operation result contract
+SRC-04	Idempotency, replay determinism, duplicate behavior, IN_PROGRESS recovery
+SRC-05	Ledger journal, balance invariants, temporal anchoring, commit atomicity
+SRC-06	Failure model and deterministic rejection classes
+SRC-07	Read Model derivation, sync, freshness, rebuild rules
+SRC-08	Upgrade safety, stable-state rules, migration checks, maintenance mode
+SRC-09	API surface, query/update semantics, forbidden APIs
+SRC-10	Test proof requirements, acceptance criteria, falsifiers
+
+2.1 Ownership Rule
+
+OWN-001:
+Each correctness-sensitive concept MUST have exactly one owning SRC file.
+
+OWN-002:
+A non-owner SRC file MAY reference an owned concept but MUST NOT redefine it.
+
+OWN-003:
+If two SRC files define the same correctness behavior differently, generation MUST stop with SOURCE_CONFLICT.
+
+OWN-004:
+If no SRC file owns a correctness-sensitive behavior, generation MUST stop with SOURCE_GAP or ROUTING_GAP.
+3. ID Namespace Registry
+Prefix	Meaning	Owning SRC File	Allowed Referencing Files
+PROJECT-*	Project identity, thesis, scope	SRC-00	SRC-INDEX, SRC-01..SRC-10
+ADR-*	Architectural decisions	SRC-00	SRC-01, SRC-05, SRC-08, SRC-09
+ARCH-*	Architecture rules	SRC-01	SRC-03, SRC-04, SRC-05, SRC-07, SRC-09
+AUTH-*	Authority and permission rules	SRC-01	SRC-03, SRC-04, SRC-09, SRC-10
+BOOT-*	Bootstrap/admin rules	SRC-01	SRC-02, SRC-05, SRC-09, SRC-10
+ENTITY-*	Shared entity rules	SRC-02	SRC-03, SRC-05, SRC-08, SRC-10
+ACCOUNT-*	Account rules	SRC-02	SRC-03, SRC-05, SRC-09, SRC-10
+ASSET-*	Asset rules	SRC-02	SRC-03, SRC-05, SRC-09, SRC-10
+BAL-*	Balance rules	SRC-02	SRC-03, SRC-05, SRC-08, SRC-10
+AMOUNT-*	Amount and decimal rules	SRC-02	SRC-03, SRC-04, SRC-05, SRC-10
+OPER-*	Operation record rules	SRC-02	SRC-03, SRC-04, SRC-05, SRC-08, SRC-10
+LIFE-*	Operation lifecycle rules	SRC-03	SRC-04, SRC-05, SRC-06, SRC-10
+TRANSFER-*	Transfer-specific rules	SRC-03	SRC-04, SRC-05, SRC-06, SRC-10
+RESULT-*	Operation result contract	SRC-03	SRC-04, SRC-10
+IDEMP-*	Idempotency and replay rules	SRC-04	SRC-03, SRC-05, SRC-08, SRC-10
+LEDGER-*	Ledger entry rules	SRC-05	SRC-03, SRC-07, SRC-08, SRC-10
+JOURNAL-*	Journal ordering and identity rules	SRC-05	SRC-07, SRC-08, SRC-10
+TIME-*	Timestamp and temporal anchoring rules	SRC-05	SRC-03, SRC-04, SRC-08, SRC-10
+INV-*	System invariants	SRC-05	SRC-06, SRC-10
+FAIL-*	Failure classes	SRC-06	SRC-03, SRC-04, SRC-05, SRC-08, SRC-10
+READ-*	Read Model rules	SRC-07	SRC-05, SRC-08, SRC-09, SRC-10
+STABLE-*	Stable-state rules	SRC-08	SRC-02, SRC-04, SRC-05, SRC-10
+UPG-*	Upgrade safety rules	SRC-08	SRC-05, SRC-07, SRC-10
+API-*	API surface rules	SRC-09	SRC-01, SRC-03, SRC-07, SRC-10
+FORBID-*	Forbidden APIs or behavior	SRC-09	SRC-01, SRC-03, SRC-05, SRC-07, SRC-10
+TEST-*	Verification tests	SRC-10	SRC-INDEX, BLD-*
+DONE-*	Definition of Done	SRC-10	SRC-00, SRC-INDEX, BLD-*
+FALSIFIER-*	High-value falsifiers	SRC-10	SRC-00, SRC-05, SRC-08
+RISK-*	Known project risks	SRC-10	SRC-00, SRC-INDEX
+
+3.1 Namespace Ownership Rule
+
+NS-001:
+The Owning SRC File column defines the only file allowed to define the namespace semantics.
+
+NS-002:
+Allowed referencing files may trace to, test, or depend on the namespace but MUST NOT redefine it.
+
+NS-003:
+A generated SRC record whose id prefix is not owned by the target SRC file is invalid unless the target file is only referencing that id in trace.
+
+NS-004:
+Multi-owner namespace claims are forbidden.
+4. Project Identity
+4.1 Project Name
+
+ICP Deterministic Ledger Kernel
+
+4.2 One-Sentence Description
+
+A transfer-only, multi-canister correctness kernel on ICP that proves idempotent, append-only, upgrade-safe balance mutation through explicit authority boundaries and a single local Ledger Core commit path.
+
+4.3 Core Thesis
+
+The project is not primarily a finance app.
+
+The project is a correctness-preserving execution architecture.
+
+It proves that balance-affecting operations on ICP can be constrained through:
+
+isolated canister authority
