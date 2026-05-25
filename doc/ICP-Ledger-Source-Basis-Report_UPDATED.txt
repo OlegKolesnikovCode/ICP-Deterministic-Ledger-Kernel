@@ -1,0 +1,1673 @@
+ICP Ledger Source-Basis Report
+
+Project: ICP Deterministic Ledger Kernel
+Purpose: Source-basis document for generating governed SRC-* files and downstream BLD-* implementation files.
+Status: Draft source-basis / extraction input. Not active governed source authority until converted into GOV-compliant JSONL records and activated by GOV-00 / SRC-INDEX.
+Source basis: Extends the uploaded ICP Ledger Correctness Kernel report.
+Update scope: Incorporates authority-status, routing-ownership, ICP caller identity, MVP scope, idempotency recovery, atomicity, canonical serialization, amount representation, upgrade safety, and BLD-precondition corrections.
+
+0. Report Purpose
+
+This document defines the missing source-basis material required to generate the following governed source files:
+
+SRC-INDEX__SOURCE_TRACEABILITY__LOOKUP_ROUTING.jsonl
+
+SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl
+SRC-01__CANISTER_AUTHORITY_MODEL__SOURCE__SYSTEM.jsonl
+SRC-02__DOMAIN_ENTITIES__SOURCE__SYSTEM.jsonl
+SRC-03__TRANSFER_OPERATION__SOURCE__SYSTEM.jsonl
+SRC-04__IDEMPOTENCY_REPLAY__SOURCE__SYSTEM.jsonl
+SRC-05__LEDGER_JOURNAL_INVARIANTS__SOURCE__SYSTEM.jsonl
+SRC-06__FAILURE_MODEL__SOURCE__SYSTEM.jsonl
+SRC-07__READ_MODEL_DERIVATION__SOURCE__SYSTEM.jsonl
+SRC-08__UPGRADE_SAFETY__SOURCE__SYSTEM.jsonl
+SRC-09__API_SURFACE_FORBIDDEN_APIS__SOURCE__SYSTEM.jsonl
+SRC-10__TEST_PROOF_REQUIREMENTS__SOURCE__SYSTEM.jsonl
+
+This report is not implementation guidance. It defines source-basis material for governed source extraction.
+
+This report is NOT itself an active governed source file unless converted into GOV-compliant JSONL records and activated by GOV-00 / SRC-INDEX.
+
+Implementation instructions belong in BLD-* files.
+
+0.1 Authority Classification
+
+BASIS-001:
+This report is SOURCE_BASIS / EXTRACTION_INPUT.
+
+BASIS-002:
+This report MUST NOT be treated as final active source authority until its rules are converted into GOV-compliant JSONL source records.
+
+BASIS-003:
+Generated SRC-* files MUST preserve traceability to the source-basis concepts in this report but MUST be governed by GOV-00 schema, authority, scope, and trace rules.
+
+BASIS-004:
+If this report conflicts with GOV-00, GOV-00 wins.
+
+BASIS-005:
+If generated SRC-* records conflict with this report, the generated SRC-* records are invalid unless the conflict is explicitly resolved by a higher-authority GOV/SRC rule.
+
+BASIS-006:
+This report MAY be cited as source-basis evidence but MUST NOT be used as a lower-friction substitute for governed JSONL source records.
+
+1. Normative Language
+Term	Meaning
+MUST	Required. Violation compromises the architecture.
+MUST NOT	Forbidden. Violation creates correctness risk.
+SHOULD	Strong recommendation. Deviate only with explicit justification.
+MAY	Optional. Not required for MVP.
+2. Source Extraction Map
+SRC File	Source Responsibility
+SRC-00	Project identity, thesis, scope, non-goals, default decisions, ADR ownership
+SRC-01	Canister authority model, trusted Gateway envelope, cross-canister correctness boundaries
+SRC-02	Domain entities, entity identity, account/asset/balance semantics, amount semantics
+SRC-03	Transfer operation requirements, operation lifecycle, operation result contract
+SRC-04	Idempotency, replay determinism, duplicate behavior, IN_PROGRESS recovery
+SRC-05	Ledger journal, balance invariants, temporal anchoring, commit atomicity
+SRC-06	Failure model and deterministic rejection classes
+SRC-07	Read Model derivation, sync, freshness, rebuild rules
+SRC-08	Upgrade safety, stable-state rules, migration checks, maintenance mode
+SRC-09	API surface, query/update semantics, forbidden APIs
+SRC-10	Test proof requirements, acceptance criteria, falsifiers
+
+2.1 Ownership Rule
+
+OWN-001:
+Each correctness-sensitive concept MUST have exactly one owning SRC file.
+
+OWN-002:
+A non-owner SRC file MAY reference an owned concept but MUST NOT redefine it.
+
+OWN-003:
+If two SRC files define the same correctness behavior differently, generation MUST stop with SOURCE_CONFLICT.
+
+OWN-004:
+If no SRC file owns a correctness-sensitive behavior, generation MUST stop with SOURCE_GAP or ROUTING_GAP.
+3. ID Namespace Registry
+Prefix	Meaning	Owning SRC File	Allowed Referencing Files
+PROJECT-*	Project identity, thesis, scope	SRC-00	SRC-INDEX, SRC-01..SRC-10
+ADR-*	Architectural decisions	SRC-00	SRC-01, SRC-05, SRC-08, SRC-09
+ARCH-*	Architecture rules	SRC-01	SRC-03, SRC-04, SRC-05, SRC-07, SRC-09
+AUTH-*	Authority and permission rules	SRC-01	SRC-03, SRC-04, SRC-09, SRC-10
+BOOT-*	Bootstrap/admin rules	SRC-01	SRC-02, SRC-05, SRC-09, SRC-10
+ENTITY-*	Shared entity rules	SRC-02	SRC-03, SRC-05, SRC-08, SRC-10
+ACCOUNT-*	Account rules	SRC-02	SRC-03, SRC-05, SRC-09, SRC-10
+ASSET-*	Asset rules	SRC-02	SRC-03, SRC-05, SRC-09, SRC-10
+BAL-*	Balance rules	SRC-02	SRC-03, SRC-05, SRC-08, SRC-10
+AMOUNT-*	Amount and decimal rules	SRC-02	SRC-03, SRC-04, SRC-05, SRC-10
+OPER-*	Operation record rules	SRC-02	SRC-03, SRC-04, SRC-05, SRC-08, SRC-10
+LIFE-*	Operation lifecycle rules	SRC-03	SRC-04, SRC-05, SRC-06, SRC-10
+TRANSFER-*	Transfer-specific rules	SRC-03	SRC-04, SRC-05, SRC-06, SRC-10
+RESULT-*	Operation result contract	SRC-03	SRC-04, SRC-10
+IDEMP-*	Idempotency and replay rules	SRC-04	SRC-03, SRC-05, SRC-08, SRC-10
+LEDGER-*	Ledger entry rules	SRC-05	SRC-03, SRC-07, SRC-08, SRC-10
+JOURNAL-*	Journal ordering and identity rules	SRC-05	SRC-07, SRC-08, SRC-10
+TIME-*	Timestamp and temporal anchoring rules	SRC-05	SRC-03, SRC-04, SRC-08, SRC-10
+INV-*	System invariants	SRC-05	SRC-06, SRC-10
+FAIL-*	Failure classes	SRC-06	SRC-03, SRC-04, SRC-05, SRC-08, SRC-10
+READ-*	Read Model rules	SRC-07	SRC-05, SRC-08, SRC-09, SRC-10
+STABLE-*	Stable-state rules	SRC-08	SRC-02, SRC-04, SRC-05, SRC-10
+UPG-*	Upgrade safety rules	SRC-08	SRC-05, SRC-07, SRC-10
+API-*	API surface rules	SRC-09	SRC-01, SRC-03, SRC-07, SRC-10
+FORBID-*	Forbidden APIs or behavior	SRC-09	SRC-01, SRC-03, SRC-05, SRC-07, SRC-10
+TEST-*	Verification tests	SRC-10	SRC-INDEX, BLD-*
+DONE-*	Definition of Done	SRC-10	SRC-00, SRC-INDEX, BLD-*
+FALSIFIER-*	High-value falsifiers	SRC-10	SRC-00, SRC-05, SRC-08
+RISK-*	Known project risks	SRC-10	SRC-00, SRC-INDEX
+
+3.1 Namespace Ownership Rule
+
+NS-001:
+The Owning SRC File column defines the only file allowed to define the namespace semantics.
+
+NS-002:
+Allowed referencing files may trace to, test, or depend on the namespace but MUST NOT redefine it.
+
+NS-003:
+A generated SRC record whose id prefix is not owned by the target SRC file is invalid unless the target file is only referencing that id in trace.
+
+NS-004:
+Multi-owner namespace claims are forbidden.
+4. Project Identity
+4.1 Project Name
+
+ICP Deterministic Ledger Kernel
+
+4.2 One-Sentence Description
+
+A transfer-only, multi-canister correctness kernel on ICP that proves idempotent, append-only, upgrade-safe balance mutation through explicit authority boundaries and a single local Ledger Core commit path.
+
+4.3 Core Thesis
+
+The project is not primarily a finance app.
+
+The project is a correctness-preserving execution architecture.
+
+It proves that balance-affecting operations on ICP can be constrained through:
+
+isolated canister authority
+deterministic state transitions
+single authoritative mutation path
+idempotent request handling
+atomic Ledger Core execution
+append-only journal proof
+derived non-authoritative read models
+upgrade-safe stable state
+test-mapped invariants
+5. Project Non-Goals
+
+This project is not:
+
+A wallet application.
+A DeFi protocol.
+A token standard implementation.
+A replacement for the ICP Ledger or ICRC standards.
+A general accounting system.
+A production banking ledger.
+A multi-operation settlement system.
+A UI-first project.
+A performance benchmark.
+A market-ready financial product.
+
+The project is a bounded correctness kernel proving one balance-affecting operation:
+
+Transfer
+6. Primary Architectural Decision
+ADR-001 — Ledger Core Owns Journal and Balance Mutation
+Decision
+
+The MVP MUST use this model:
+
+Ledger Core Canister owns:
+  - accounts
+  - assets
+  - balances
+  - operation records
+  - idempotency records
+  - append-only journal entries
+  - authoritative commit logic
+Rejected Model
+
+The MVP MUST NOT use this design:
+
+Ledger Core Canister mutates balances.
+Separate Journal Canister appends ledger entries later.
+Rationale
+
+A separate Journal Canister introduces cross-canister partial-commit risk.
+
+Bad sequence:
+
+1. Ledger Core mutates balance.
+2. Ledger Core calls Journal Canister.
+3. Journal append fails.
+4. Balance changed without authoritative journal proof.
+
+This violates the core invariant:
+
+INV-001:
+Every balance change MUST have one or more authoritative LedgerEntry records.
+
+ICP’s message execution model supports this design decision: single canister message execution is atomic and sequential, but inter-canister calls can split execution into multiple message executions. ICP’s docs also state that methods using inter-canister calls are not atomic across the full method, and failures may not roll back all prior state changes.
+
+7. Canister Authority Model
+7.1 Canister Layout
+Frontend / User
+  ↓
+Gateway Canister
+  ↓
+Ledger Core Canister
+  ↓ pull/query/rebuild
+Read Model Canister
+7.2 Authority Matrix
+Capability	Gateway	Ledger Core	Read Model
+Accept external requests	Yes	Optional/internal	No
+Authenticate external caller	Yes	Verify Gateway envelope and debit authority	No
+Read immediate ICP caller	Yes	Yes	No
+Validate request shape	Yes	Yes	No
+Normalize request	Yes	Yes	No
+Create authenticated request envelope	Yes	Verify only	No
+Authorize debit	No	Yes	No
+Check sufficient funds	No	Yes	No
+Validate asset symmetry	No	Yes	No
+Mutate balances	No	Yes	No
+Append journal entries	No	Yes	No
+Store idempotency result	No	Yes	No
+Store authoritative operation result	No	Yes	No
+Serve optimized views	Maybe	Maybe	Yes
+Rebuild projections	No	Source	Yes
+Affect correctness	No	Yes	No
+7.3 Authority Rules
+AUTH-001:
+Gateway decides whether a request is well-formed and allowed to enter the system.
+
+AUTH-002:
+Ledger Core decides whether the request is financially valid and commit-safe.
+
+AUTH-003:
+Only Ledger Core may authorize and commit balance-affecting operations.
+
+AUTH-004:
+Ledger Core MUST read immediateCallerPrincipal from ICP execution context.
+
+AUTH-005:
+Ledger Core MUST NOT accept debitAuthorityPrincipal from arbitrary user request body.
+
+AUTH-006:
+For Transfer, debitAuthorityPrincipal MUST equal sourceAccount.ownerPrincipal.
+
+AUTH-007:
+Gateway MAY authenticate caller identity, but Gateway MUST NOT be the final debit authority.
+
+AUTH-008:
+Ledger Core MUST independently verify debit authorization before commit.
+
+AUTH-009:
+Read Model MUST NOT make authorization decisions for balance-affecting operations.
+
+AUTH-010:
+Admin/bootstrap authority MUST be explicitly separated from user transfer authority.
+
+AUTH-011:
+If Gateway is in the write path, Ledger Core MUST treat immediateCallerPrincipal as the Gateway Canister principal, not as the original external user.
+
+AUTH-012:
+If Gateway is in the write path, Ledger Core MUST accept originalCallerPrincipal only through a Gateway-authenticated envelope.
+
+AUTH-013:
+Ledger Core MUST verify that immediateCallerPrincipal is an authorized Gateway Canister before using any Gateway-attested originalCallerPrincipal.
+
+AUTH-014:
+If immediateCallerPrincipal is not an authorized Gateway Canister, Ledger Core MUST reject Gateway-envelope execution.
+
+AUTH-015:
+Gateway-authenticated envelope fields MUST be constructed by Gateway from ICP execution context and normalized request data; they MUST NOT be copied from arbitrary user body fields.
+
+AUTH-016:
+Ledger Core MUST use debitAuthorityPrincipal, not Gateway immediateCallerPrincipal, when checking sourceAccount.ownerPrincipal.
+
+AUTH-017:
+Direct Ledger Core calls MAY be allowed only if SRC-01 explicitly defines direct-call authorization semantics; otherwise Gateway-envelope execution is the MVP write-path model.
+
+7.4 Caller Identity Model
+
+The MVP uses the following write identity model:
+
+Frontend / User calls Gateway Canister.
+Gateway reads the external caller from ICP execution context.
+Gateway constructs a normalized authenticated request envelope.
+Gateway calls Ledger Core.
+Ledger Core sees Gateway as immediateCallerPrincipal.
+Ledger Core verifies Gateway is authorized.
+Ledger Core uses Gateway-attested originalCallerPrincipal as debitAuthorityPrincipal only after verifying the Gateway envelope.
+
+AUTH-CALLER-001:
+originalCallerPrincipal means the external user principal authenticated by Gateway.
+
+AUTH-CALLER-002:
+immediateCallerPrincipal means the principal returned by ICP execution context in the currently executing canister method.
+
+AUTH-CALLER-003:
+debitAuthorityPrincipal means the principal Ledger Core uses for Transfer debit authorization.
+
+AUTH-CALLER-004:
+In Gateway-mediated execution, debitAuthorityPrincipal MUST equal originalCallerPrincipal after Gateway authorization is verified.
+
+AUTH-CALLER-005:
+In Gateway-mediated execution, debitAuthorityPrincipal MUST NOT equal immediateCallerPrincipal unless the Gateway Canister itself is the source account owner.
+
+AUTH-CALLER-006:
+Any generated implementation that checks sourceAccount.ownerPrincipal against the Gateway Canister principal instead of the authenticated external user principal violates the authority model.
+8. Bootstrap and Admin Authority
+
+The MVP MAY use deterministic bootstrap data for demo accounts, demo asset, and initial balances.
+
+BOOT-001:
+MVP MAY use deterministic seed/bootstrap state for demo accounts, demo asset, and initial balances.
+
+BOOT-002:
+Bootstrap logic MUST be separated from runtime Transfer execution.
+
+BOOT-003:
+Bootstrap logic MUST NOT be callable as a normal user balance-affecting operation.
+
+BOOT-004:
+Asset creation is not part of MVP runtime behavior unless explicitly added later.
+
+BOOT-005:
+Account creation is not part of MVP runtime behavior unless explicitly added later.
+
+BOOT-006:
+Initial demo balances MUST be traceable as bootstrap state, not Transfer-created state.
+
+BOOT-007:
+Bootstrap state MUST NOT weaken Transfer invariants.
+
+BOOT-008:
+No public setBalance, mintBalance, or overwriteBalance API may exist in MVP.
+
+BOOT-009:
+Admin-only functions, if present, MUST be clearly separated from user operation APIs.
+9. Domain Entity Rules
+9.1 Account
+type Account = {
+  accountId: string;
+  ownerPrincipal: string;
+  status: "ACTIVE" | "FROZEN" | "CLOSED";
+  createdAt: bigint;
+};
+ACCOUNT-001:
+Only an ACTIVE account may send funds.
+
+ACCOUNT-002:
+Only an ACTIVE account may receive funds in MVP.
+
+ACCOUNT-003:
+debitAuthorityPrincipal MUST equal sourceAccount.ownerPrincipal for Transfer.
+
+ACCOUNT-004:
+FROZEN or CLOSED accounts MUST NOT initiate transfer debits.
+
+ACCOUNT-005:
+Account identity MUST be stable across upgrade.
+
+ACCOUNT-006:
+Account deletion is not part of MVP.
+9.2 Asset
+type Asset = {
+  assetId: string;
+  symbol: string;
+  decimals: number;
+  status: "ACTIVE" | "DISABLED";
+  createdAt: bigint;
+};
+ASSET-001:
+Only ACTIVE assets may be transferred.
+
+ASSET-002:
+All ledger entries for one operation MUST use the same assetId.
+
+ASSET-003:
+Asset identity MUST be stable across upgrade.
+
+ASSET-004:
+Asset creation is not part of MVP runtime behavior unless explicitly added later.
+
+ASSET-005:
+Asset.decimals MUST be used for input validation and display interpretation, not floating-point storage.
+9.3 Balance
+type Balance = {
+  accountId: string;
+  assetId: string;
+  amount: string;
+  updatedAt: bigint;
+};
+BAL-001:
+Balance identity is unique by accountId + assetId.
+
+BAL-002:
+Balance amount MUST NOT become negative.
+
+BAL-003:
+Balance mutation MUST occur only inside Ledger Core.
+
+BAL-004:
+Balance state MUST be derivable from bootstrap state plus authoritative journal history.
+
+BAL-005:
+Balance.updatedAt SHOULD use the canonical operation timestamp for committed operations.
+10. Amount and Decimal Rules
+AMOUNT-001:
+All authoritative amounts MUST be represented as integer minor units.
+
+AMOUNT-002:
+Floating-point numbers MUST NOT be used for authoritative balance math.
+
+AMOUNT-003:
+Transfer amount MUST be greater than zero.
+
+AMOUNT-004:
+Amount parsing MUST reject negative values.
+
+AMOUNT-005:
+Amount parsing MUST reject zero.
+
+AMOUNT-006:
+Amount parsing MUST reject empty strings.
+
+AMOUNT-007:
+Amount parsing MUST reject malformed strings.
+
+AMOUNT-008:
+Amount parsing MUST reject decimal precision greater than Asset.decimals.
+
+AMOUNT-009:
+Asset.decimals defines display precision; authoritative storage uses integer minor units.
+
+AMOUNT-010:
+Balance arithmetic MUST be exact and deterministic.
+
+AMOUNT-011:
+Overflow and underflow MUST reject before mutation.
+
+AMOUNT-012:
+The canonical internal amount representation MUST be stable across upgrade.
+
+AMOUNT-013:
+Authoritative internal amount MUST be canonical unsigned integer minor units.
+
+AMOUNT-014:
+Equivalent decimal inputs MUST normalize to one canonical internal representation.
+
+AMOUNT-015:
+Response serialization MUST emit amount in one canonical format.
+
+AMOUNT-016:
+Maximum accepted amount MUST be source-defined before implementation generation.
+
+AMOUNT-017:
+Canonical amount parsing MUST define accepted string grammar, rejected string grammar, decimal separator, leading-zero handling, trailing-zero normalization, and precision limit.
+
+AMOUNT-018:
+Amount equality for idempotency and replay MUST compare canonical minor-unit values, not raw user input strings.
+11. Operation Lifecycle Rules
+11.1 Operation Record
+type Operation = {
+  operationId: string;
+  requestIdentity: string;
+  operationType: "TRANSFER";
+  status: "RECEIVED" | "COMMITTED" | "REJECTED";
+  debitAuthorityPrincipal: string;
+  immediateCallerPrincipal: string;
+  assetId: string;
+  createdAt: bigint;
+  completedAt?: bigint;
+  rejectionReason?: string;
+};
+
+OPER-001:
+The MVP operation type set is exactly TRANSFER.
+
+OPER-002:
+DEPOSIT and WITHDRAWAL are future-reserved operation families and MUST NOT be accepted, routed, implemented, exposed, or partially generated in the MVP.
+
+OPER-003:
+Any generated code path that accepts operationType values other than TRANSFER is outside MVP scope and invalid unless a future active SRC extension adds that operation.
+
+OPER-004:
+Operation identity MUST be stable across upgrade.
+
+OPER-005:
+Operation records MUST preserve debitAuthorityPrincipal and immediateCallerPrincipal distinctly when Gateway-mediated execution is used.
+11.2 Lifecycle Rules
+LIFE-001:
+The only MVP operation states are RECEIVED, COMMITTED, and REJECTED.
+
+LIFE-002:
+Allowed transitions:
+- NONE → RECEIVED
+- RECEIVED → COMMITTED
+- RECEIVED → REJECTED
+
+LIFE-003:
+Forbidden transitions:
+- COMMITTED → REJECTED
+- REJECTED → COMMITTED
+- COMMITTED → RECEIVED
+- REJECTED → RECEIVED
+- COMMITTED → COMMITTED by mutation
+- REJECTED → REJECTED by mutation
+
+LIFE-004:
+Terminal operation states are COMMITTED and REJECTED.
+
+LIFE-005:
+External APIs MUST NOT patch operation state.
+
+LIFE-006:
+A COMMITTED operation MUST have authoritative LedgerEntry records.
+
+LIFE-007:
+A REJECTED operation MUST have deterministic rejection reason if stored as an idempotency outcome.
+12. Transfer Operation Requirements
+12.1 Transfer Request
+type TransferRequest = {
+  requestId: string;
+  sourceAccountId: string;
+  destinationAccountId: string;
+  assetId: string;
+  amount: string;
+};
+
+caller identity MUST follow the AUTH-CALLER-* model.
+
+For Gateway-mediated execution, originalCallerPrincipal MUST come from Gateway ICP execution context, not from user input.
+
+Ledger Core MUST verify the Gateway envelope and use debitAuthorityPrincipal for source-account authorization.
+
+TransferRequest body MUST NOT contain trusted callerPrincipal, originalCallerPrincipal, or debitAuthorityPrincipal fields.
+
+12.2 Transfer Validation Rules
+TRANSFER-001:
+requestId MUST be present.
+
+TRANSFER-002:
+sourceAccountId MUST be present.
+
+TRANSFER-003:
+destinationAccountId MUST be present.
+
+TRANSFER-004:
+assetId MUST be present.
+
+TRANSFER-005:
+amount MUST be present.
+
+TRANSFER-006:
+amount MUST be valid under AMOUNT-* rules.
+
+TRANSFER-007:
+sourceAccountId MUST NOT equal destinationAccountId in MVP.
+
+TRANSFER-008:
+source account MUST exist.
+
+TRANSFER-009:
+destination account MUST exist.
+
+TRANSFER-010:
+asset MUST exist.
+
+TRANSFER-011:
+asset MUST be ACTIVE.
+
+TRANSFER-012:
+source account MUST be ACTIVE.
+
+TRANSFER-013:
+destination account MUST be ACTIVE.
+
+TRANSFER-014:
+debitAuthorityPrincipal MUST equal sourceAccount.ownerPrincipal.
+
+TRANSFER-015:
+source account MUST have sufficient funds.
+
+TRANSFER-016:
+assetId MUST match source balance, destination balance, operation, and ledger entries.
+
+TRANSFER-017:
+A valid Transfer MUST produce exactly two balance mutations:
+- one source debit
+- one destination credit
+
+TRANSFER-018:
+A valid Transfer MUST produce exactly two LedgerEntry records:
+- one DEBIT entry for source account
+- one CREDIT entry for destination account.
+13. Operation Result Contract
+RESULT-001:
+Every accepted Transfer request MUST resolve to one deterministic result.
+
+RESULT-002:
+A committed result MUST include:
+- operationId
+- requestId
+- idempotencyKey
+- operationType
+- status
+- sourceAccountId
+- destinationAccountId
+- assetId
+- amount
+- ledgerEntryIds
+- canonicalTimestamp
+
+RESULT-003:
+A rejected result MUST include:
+- requestId
+- idempotencyKey
+- operationType
+- status
+- rejectionReason
+- deterministicErrorCode
+
+RESULT-004:
+Duplicate requests MUST return the same deterministic result body for the same idempotency key.
+
+RESULT-005:
+System/internal failures that occur before deterministic business rejection MUST NOT be stored as final rejected business outcomes unless explicitly classified as deterministic.
+
+RESULT-006:
+Response hashing MUST be computed from canonical serialized result content.
+
+RESULT-007:
+Committed response content MUST be stable enough to support replay equality tests.
+
+RESULT-008:
+Rejected response content MUST be stable enough to support replay equality tests when the rejection is deterministic.
+
+RESULT-009:
+Canonical response serialization MUST define field order, omitted-field behavior, timestamp encoding, amount encoding, principal encoding, operation id encoding, ledger entry id ordering, and deterministic error-code encoding.
+
+RESULT-010:
+Response hashing MUST use canonical serialized response content, not language/runtime object iteration order.
+
+RESULT-011:
+Equivalent successful Transfer requests under the same idempotency key MUST produce byte-equivalent canonical response serialization on replay.
+
+RESULT-012:
+Equivalent deterministic rejected Transfer requests under the same idempotency key MUST produce byte-equivalent canonical response serialization on replay.
+
+RESULT-013:
+Canonical result content MUST include the original canonical commit timestamp for committed replay and MUST NOT replace it with replay-time timestamp.
+14. Idempotency and Replay Rules
+14.1 Idempotency Key
+
+The idempotency key MUST be:
+
+debitAuthorityPrincipal + operationType + requestId
+
+For Gateway-mediated execution, debitAuthorityPrincipal is the Gateway-authenticated originalCallerPrincipal verified by Ledger Core.
+
+The idempotency key MUST NOT be only:
+
+requestId
+
+The idempotency key MUST NOT use immediateCallerPrincipal alone when the immediate caller is Gateway.
+14.2 Idempotency Record
+type IdempotencyRecord = {
+  idempotencyKey: string;
+  debitAuthorityPrincipal: string;
+  immediateCallerPrincipal: string;
+  operationType: "TRANSFER";
+  requestId: string;
+  status: "COMMITTED" | "REJECTED" | "IN_PROGRESS";
+  operationId?: string;
+  responseHash: string;
+  deterministicResponse: string;
+  createdAt: bigint;
+  completedAt?: bigint;
+  recoveryState?: "NONE" | "STALE_IN_PROGRESS" | "RECOVERY_REQUIRED";
+};
+14.3 Duplicate Behavior
+Prior Result	Required Duplicate Behavior
+COMMITTED	Return same committed result
+REJECTED	Return same rejected result
+IN_PROGRESS	Return deterministic retry-safe response
+14.4 Rules
+IDEMP-001:
+Duplicate requests MUST NOT create duplicate balance effects.
+
+IDEMP-002:
+Duplicate requests MUST NOT create duplicate ledger entries.
+
+IDEMP-003:
+Duplicate requests MUST return the same deterministic outcome for the same idempotency key.
+
+IDEMP-004:
+Rejected requests SHOULD be stored as deterministic idempotency outcomes when rejection reason is deterministic.
+
+IDEMP-005:
+If an idempotency record is IN_PROGRESS, duplicate calls MUST return a deterministic retry-safe response.
+
+IDEMP-006:
+IN_PROGRESS records MUST NOT be treated as committed.
+
+IDEMP-007:
+IN_PROGRESS records MUST NOT create duplicate balance effects.
+
+IDEMP-008:
+If commit succeeds, idempotency status MUST become COMMITTED.
+
+IDEMP-009:
+If deterministic validation fails, idempotency status SHOULD become REJECTED.
+
+IDEMP-010:
+If non-deterministic system failure occurs before commit, the system MUST NOT expose partial committed state.
+
+IDEMP-011:
+The same requestId from two different debitAuthorityPrincipals MUST produce different idempotency keys.
+
+IDEMP-012:
+The same requestId from the same debitAuthorityPrincipal but different operationType MUST produce different idempotency keys.
+
+IDEMP-013:
+Idempotency outcomes MUST survive Ledger Core canister upgrade.
+
+IDEMP-014:
+Idempotency lookup MUST occur before any new balance mutation is attempted.
+
+IDEMP-015:
+IN_PROGRESS outcomes MUST have a deterministic recovery policy.
+
+IDEMP-016:
+If Ledger Core traps before authoritative commit, the system MUST NOT persist a COMMITTED idempotency outcome.
+
+IDEMP-017:
+A stale IN_PROGRESS record MUST resolve only through a source-defined recovery path.
+
+IDEMP-018:
+Duplicate IN_PROGRESS response body MUST be canonical and replay-stable.
+
+IDEMP-019:
+Upgrade recovery MUST preserve COMMITTED and deterministic REJECTED idempotency outcomes before attempting any IN_PROGRESS repair.
+
+IDEMP-020:
+An IN_PROGRESS record MUST NOT be converted to COMMITTED unless the corresponding authoritative Operation and required LedgerEntry records exist.
+
+IDEMP-021:
+An IN_PROGRESS record MAY be converted to deterministic REJECTED only if source-defined recovery proves no authoritative commit occurred and the rejection class is deterministic.
+
+IDEMP-022:
+An unresolved stale IN_PROGRESS record MUST put the affected idempotency key into retry-safe recovery state and MUST NOT allow duplicate balance effects.
+
+IDEMP-023:
+Idempotency keys MUST be derived from canonical normalized values, not raw request strings.
+
+IDEMP-024:
+Idempotency replay equality MUST compare canonical deterministic response serialization.
+15. Ledger Journal Rules
+15.1 LedgerEntry
+type LedgerEntry = {
+  entryId: string;
+  operationId: string;
+  accountId: string;
+  assetId: string;
+  direction: "DEBIT" | "CREDIT";
+  amount: string;
+  createdAt: bigint;
+};
+15.2 Ledger Rules
+LEDGER-001:
+LedgerEntry records are append-only.
+
+LEDGER-002:
+LedgerEntry records MUST NOT be deleted.
+
+LEDGER-003:
+LedgerEntry records MUST NOT be rewritten.
+
+LEDGER-004:
+Each balance-affecting operation MUST create one or more LedgerEntry records.
+
+LEDGER-005:
+Transfer MUST create exactly two LedgerEntry records:
+- one DEBIT for source account
+- one CREDIT for destination account.
+
+LEDGER-006:
+A LedgerEntry MUST reference a valid Operation.
+
+LEDGER-007:
+A LedgerEntry MUST reference a valid Account.
+
+LEDGER-008:
+A LedgerEntry MUST reference a valid Asset.
+
+LEDGER-009:
+A LedgerEntry MUST NOT exist without a parent Operation.
+
+LEDGER-010:
+Journal history is more authoritative than derived Read Model projections.
+15.3 Journal Ordering and Identity
+JOURNAL-001:
+LedgerEntry records MUST have globally unique entryId values within Ledger Core.
+
+JOURNAL-002:
+LedgerEntry records MUST have deterministic ordering.
+
+JOURNAL-003:
+For Transfer, the DEBIT entry SHOULD be ordered before the CREDIT entry unless a later source rule changes this.
+
+JOURNAL-004:
+LedgerEntry ordering MUST be preserved across upgrade.
+
+JOURNAL-005:
+Journal checkpoints MUST expose enough cursor information for Read Model sync.
+
+JOURNAL-006:
+A committed Operation MUST be queryable by operationId.
+
+JOURNAL-007:
+LedgerEntries MUST be queryable by operationId.
+
+JOURNAL-008:
+Journal cursor progression MUST be monotonic.
+
+JOURNAL-009:
+Read Model sync MUST NOT skip committed LedgerEntry records.
+
+JOURNAL-010:
+Journal append behavior MUST be testable.
+16. Atomic Commit Rules
+
+ICP canister methods involving inter-canister calls may create multiple message execution boundaries. The ICP docs state that each message handler is atomic on its own, but traps only roll back changes in the current message handler, not earlier handlers. The docs also warn that multiple inter-canister calls are asynchronous and a later failure does not roll back prior state effects.
+
+Therefore:
+
+ATOMIC-001:
+Ledger correctness is atomic only inside the Ledger Core Canister authoritative state transition.
+
+ATOMIC-002:
+Cross-canister calls MUST be treated as asynchronous, fallible, and non-transactional.
+
+ATOMIC-003:
+No cross-canister call may be required to complete the authoritative balance/journal commit in MVP.
+
+ATOMIC-004:
+Read Model update failure MUST NOT roll back Ledger Core commit.
+
+ATOMIC-005:
+Journal creation failure MUST invalidate balance mutation because journal is authoritative and lives inside Ledger Core.
+
+ATOMIC-006:
+Ledger Core SHOULD construct all required commit records before mutating authoritative state.
+
+ATOMIC-007:
+Failed commit MUST NOT expose partial state as committed.
+
+ATOMIC-008:
+Ledger Core MUST NOT await any inter-canister call after beginning authoritative state mutation and before commit completion.
+
+ATOMIC-009:
+Authoritative commit MUST be performed as one local Ledger Core state transition.
+
+ATOMIC-010:
+Read Model sync MUST occur only after Ledger Core commit and MUST NOT be required for commit success.
+
+ATOMIC-011:
+Gateway-to-Ledger-Core execution MAY cross canister boundaries before commit begins, but no cross-canister call may be inside the authoritative commit mutation sequence.
+
+ATOMIC-012:
+CommitPlan construction and invariant validation MUST complete before any authoritative mutation is applied.
+
+ATOMIC-013:
+Any implementation requiring a separate Journal Canister for MVP authoritative commit violates atomicity and ADR-001.
+17. Commit Plan Contract
+
+Ledger Core SHOULD build a complete commit plan before mutation.
+
+type CommitPlan = {
+  operation: Operation;
+  ledgerEntries: LedgerEntry[];
+  balanceMutations: BalanceMutation[];
+  idempotencyOutcome: IdempotencyRecord;
+  canonicalTimestamp: bigint;
+};
+COMMIT-001:
+CommitPlan MUST be constructed before authoritative mutation.
+
+COMMIT-002:
+CommitPlan MUST include Operation, LedgerEntries, BalanceMutations, Idempotency outcome, and canonical timestamp.
+
+COMMIT-003:
+CommitPlan MUST pass invariant validation before mutation.
+
+COMMIT-004:
+Commit application MUST be performed only by Ledger Core.
+
+COMMIT-005:
+Operation modules MUST return intent or BalanceChangePlan only.
+
+COMMIT-006:
+Operation modules MUST NOT apply CommitPlan directly.
+18. Timestamp and Temporal Anchoring
+TIME-001:
+Ledger Core MUST capture one canonical timestamp per operation commit.
+
+TIME-002:
+The same timestamp SHOULD be used for:
+- Operation.createdAt
+- Operation.completedAt
+- LedgerEntry.createdAt
+- Balance.updatedAt
+- IdempotencyRecord.completedAt
+
+TIME-003:
+Timestamp creation MUST occur inside Ledger Core, not Gateway.
+
+TIME-004:
+Duplicate replay MUST return the original canonical timestamp.
+
+TIME-005:
+Read Model sync timestamp MUST NOT replace authoritative commit timestamp.
+19. Core Invariants
+ID	Invariant
+INV-001	Every balance change MUST have one or more LedgerEntry records.
+INV-002	LedgerEntry records MUST be append-only.
+INV-003	Duplicate requests MUST NOT create duplicate effects.
+INV-004	Operation fully commits or does not commit.
+INV-005	Balance MUST NOT become negative.
+INV-006	Asset IDs MUST match across all entries in one operation.
+INV-007	Gateway MUST NOT authorize balance changes.
+INV-008	Read Model MUST NOT mutate authoritative state.
+INV-009	Operation modules MUST NOT write state directly.
+INV-010	Ledger Core is the only balance-affecting authority.
+INV-011	Committed operations MUST have authoritative journal entries.
+INV-012	Failed Read Model update MUST NOT invalidate Ledger Core commit.
+INV-013	Canister upgrade MUST NOT rewrite journal history.
+INV-014	Caller MUST be authorized to debit source account.
+INV-015	One canonical timestamp SHOULD anchor all records in one commit.
+INV-016	Authoritative amounts MUST use exact integer minor units.
+INV-017	Bootstrap authority MUST NOT create runtime mutation bypasses.
+INV-018	Stable state MUST preserve committed operations and idempotency outcomes.
+20. Failure Model
+20.1 Failure Classes
+ID	Failure	Required Handling
+FAIL-001	Invalid request shape	Reject before Ledger Core commit
+FAIL-002	Unauthorized caller	Reject deterministically
+FAIL-003	Unknown account	Reject deterministically
+FAIL-004	Unknown asset	Reject deterministically
+FAIL-005	Asset mismatch	Reject deterministically
+FAIL-006	Insufficient funds	Reject deterministically
+FAIL-007	Duplicate request	Return stored deterministic result
+FAIL-008	Invalid lifecycle transition	Reject before mutation
+FAIL-009	Journal construction failure	Abort balance mutation
+FAIL-010	Read Model update failure	Do not corrupt or roll back Ledger Core
+FAIL-011	Upgrade migration failure	Abort upgrade or enter maintenance mode
+FAIL-012	Inter-canister call failure	Treat as non-authoritative failure
+FAIL-013	Operation module writes state	Compile-time or test failure
+FAIL-014	Gateway mutates balance	Compile-time or test failure
+FAIL-015	Stable memory decode failure	Enter maintenance mode
+FAIL-016	Amount parse failure	Reject deterministically
+FAIL-017	Arithmetic overflow/underflow	Reject before mutation
+FAIL-018	Journal cursor corruption	Reject sync/rebuild and report invariant failure
+20.2 Failure Rules
+FAIL-RULE-001:
+Read Model failure MUST NOT invalidate Ledger Core commit.
+
+FAIL-RULE-002:
+Journal failure MUST invalidate balance mutation.
+
+FAIL-RULE-003:
+Cross-canister failure MUST NOT create partial authoritative state.
+
+FAIL-RULE-004:
+Failed commit MUST NOT leave partial state visible as committed.
+
+FAIL-RULE-005:
+Upgrade failure MUST NOT expose partially migrated authoritative state.
+
+FAIL-RULE-006:
+Deterministic business failures MAY be stored as rejected idempotency outcomes.
+
+FAIL-RULE-007:
+Nondeterministic system failures MUST NOT be falsely stored as final business rejections.
+
+FAIL-RULE-008:
+Maintenance mode MUST reject balance-affecting operations.
+21. Read Model Derivation
+21.1 Read Model Role
+
+The Read Model Canister provides query-optimized derived views.
+
+It is not authoritative.
+
+READ-001:
+Read Model corruption MUST NOT compromise Ledger Core correctness.
+
+READ-002:
+Read Model MUST be rebuildable from Ledger Core state and/or Ledger Core journal records.
+
+READ-003:
+Read Model MUST NOT be part of the authoritative commit path.
+
+READ-004:
+Read Model MAY lag behind Ledger Core.
+
+READ-005:
+Read Model sync MUST use Ledger Core journal/checkpoint data as its source.
+
+READ-006:
+Read Model MUST track the last processed journal cursor.
+
+READ-007:
+Read Model MUST expose projection freshness.
+
+READ-008:
+Read Model lag MUST NOT block Transfer commit.
+
+READ-009:
+Read Model rebuild MUST be deterministic from Ledger Core journal state.
+
+READ-010:
+Read Model projections MAY be deleted and rebuilt without changing Ledger Core truth.
+
+READ-011:
+Read Model query responses SHOULD expose freshness metadata when relevant.
+
+READ-012:
+Read Model MUST NOT infer missing authoritative events.
+
+READ-013:
+Read Model MUST NOT authorize, reject, approve, or mutate balance-affecting operations.
+21.2 Projection Freshness
+type ProjectionFreshness = {
+  lastProcessedLedgerEntryId: string;
+  lastProcessedOperationId: string;
+  lastSyncAt: bigint;
+  sourceCanisterId: string;
+};
+22. Stable State and Upgrade Safety
+
+ICP docs state that regular memory is discarded during Rust canister upgrade, while stable memory is preserved. ICP security guidance also recommends using stable memory, versioning stable memory, and testing upgrade hooks for upgrade-safe persistence. Stable structures read and write directly to stable memory and survive canister upgrades without requiring pre_upgrade/post_upgrade serialization hooks.
+
+22.1 Stable-State Rules
+STABLE-001:
+Ledger Core authoritative state MUST survive canister upgrade.
+
+STABLE-002:
+Stable state MUST include:
+- accounts
+- assets
+- balances
+- operations
+- idempotency records
+- ledger entries
+- schema version
+- maintenance mode flag, if used
+
+STABLE-003:
+Read Model projections MAY be treated as rebuildable derived state.
+
+STABLE-004:
+Stable state schema MUST be versioned.
+
+STABLE-005:
+Post-upgrade checks MUST run before normal operation resumes.
+
+STABLE-006:
+If post-upgrade invariant checks fail, Ledger Core MUST reject balance-affecting operations until resolved.
+
+STABLE-007:
+Upgrade migration MUST NOT rewrite journal history.
+
+STABLE-008:
+Upgrade migration MUST NOT silently drop committed operations.
+
+STABLE-009:
+Upgrade migration MUST preserve idempotency outcomes.
+
+STABLE-010:
+Stable-state schema version MUST be queryable or inspectable for diagnostics.
+22.2 Upgrade Rules
+UPG-001:
+Ledger Core stable state schema MUST be versioned.
+
+UPG-002:
+Pre-upgrade logic, if used, MUST serialize authoritative state safely.
+
+UPG-003:
+Post-upgrade logic MUST deserialize into a checked state version.
+
+UPG-004:
+Failed migration MUST NOT expose partially migrated state.
+
+UPG-005:
+Ledger entries MUST NOT be rewritten during migration.
+
+UPG-006:
+Post-upgrade invariant checks MUST run before normal operation resumes.
+
+UPG-007:
+If post-upgrade checks fail, Ledger Core MUST enter safe maintenance mode.
+
+UPG-008:
+Balances MAY be recalculated from authoritative journal if needed.
+
+UPG-009:
+Journal entries are more authoritative than derived projections.
+
+UPG-010:
+Read Model projections MAY be deleted and rebuilt after upgrade.
+
+UPG-011:
+Ledger Core MUST enter MAINTENANCE before migration begins if migration can fail.
+
+UPG-012:
+Post-upgrade validation MUST verify journal-entry count, operation references, balance non-negativity, idempotency outcomes, schema version, and journal ordering.
+
+UPG-013:
+Failed migration MUST expose diagnostic read APIs where safe but MUST reject balance-affecting updates.
+
+UPG-014:
+Migration MUST be idempotent or version-gated.
+
+UPG-015:
+Migration MUST NOT create, delete, reorder, or rewrite LedgerEntry records as a side effect of schema repair.
+
+UPG-016:
+If balances are recalculated from authoritative journal, recalculation MUST be deterministic and source-mapped to journal history.
+
+UPG-017:
+Upgrade success MUST NOT be declared until post-upgrade invariant checks pass.
+
+UPG-018:
+If post-upgrade invariant checks fail, Ledger Core MUST remain in maintenance mode until a source-defined repair or rollback path is executed.
+23. API Semantics
+23.1 Gateway API
+API	Type	Authority
+submitTransfer(request)	update	External request boundary; constructs authenticated transfer envelope
+getOperation(operationId)	query/read	Delegated read
+getAccountBalance(accountId, assetId)	query/read	Delegated read
+getLedgerEntries(operationId)	query/read	Delegated read
+getProjectionFreshness()	query/read	Delegated read
+23.2 Ledger Core API
+API	Type	Authority
+executeTransfer(authenticatedEnvelope)	update	Authoritative commit
+getOperation(operationId)	query/read	Authoritative read
+getAuthoritativeBalance(accountId, assetId)	query/read	Authoritative read
+getLedgerEntries(operationId)	query/read	Authoritative journal read
+getJournalCheckpoint(cursor)	query/read	Sync source
+getInvariantStatus()	query/read	Diagnostic
+23.3 Read Model API
+API	Type	Authority
+getAccountBalanceView(accountId, assetId)	query/read	Derived read
+getAccountSummary(accountId)	query/read	Derived read
+getOperationSummary(operationId)	query/read	Derived read
+getProjectionFreshness()	query/read	Derived freshness
+syncFromLedgerCore()	update	Derived sync
+rebuildFromLedgerCore()	update	Derived rebuild
+23.4 API Rules
+API-001:
+submitTransfer(request) is an update call.
+
+API-002:
+executeTransfer(normalizedRequest) is an update call.
+
+API-003:
+getOperation(operationId) is a query/read method.
+
+API-004:
+getAuthoritativeBalance(accountId, assetId) is a query/read method.
+
+API-005:
+getLedgerEntries(operationId) is a query/read method.
+
+API-006:
+getJournalCheckpoint(cursor) is a query/read method.
+
+API-007:
+syncFromLedgerCore() may be an update call on Read Model.
+
+API-008:
+rebuildFromLedgerCore() may be an update call on Read Model.
+
+API-009:
+Read APIs MUST NOT mutate Ledger Core authoritative state.
+
+API-010:
+Write APIs MUST pass through required authority and invariant checks.
+
+API-011:
+No public API may bypass idempotency control for balance-affecting operations.
+
+API-012:
+No public API may bypass Ledger Core consistency boundary.
+
+API-013:
+Gateway submitTransfer MUST NOT forward trusted caller fields from user body.
+
+API-014:
+Gateway submitTransfer MUST construct authenticatedEnvelope from ICP caller context plus normalized request fields.
+
+API-015:
+Ledger Core executeTransfer MUST verify the Gateway principal before trusting authenticatedEnvelope originalCallerPrincipal.
+
+API-016:
+Any direct Ledger Core executeTransfer API must either be private/internal or governed by explicit SRC-01 direct-call authorization rules.
+
+API-017:
+Public APIs MUST NOT expose DEPOSIT or WITHDRAWAL operation submission in MVP.
+
+API-018:
+API schemas MUST preserve canonical field names required for response serialization and idempotency hashing.
+24. Forbidden APIs and Forbidden Behavior
+24.1 Forbidden API Names
+
+These MUST NOT exist in the MVP:
+
+patchBalance()
+createLedgerEntry()
+setOperationState()
+deleteLedgerEntry()
+rewriteJournal()
+forceCommitOperation()
+mutateReadModelAsAuthority()
+gatewayDebitAccount()
+gatewayCreditAccount()
+operationModuleWriteBalance()
+operationModuleAppendJournal()
+setBalance()
+mintBalance()
+overwriteBalance()
+submitDeposit()
+submitWithdrawal()
+executeDeposit()
+executeWithdrawal()
+24.2 Forbidden Behavior Classes
+FORBID-001:
+Any external API that directly mutates Balance is forbidden.
+
+FORBID-002:
+Any external API that directly creates LedgerEntry is forbidden.
+
+FORBID-003:
+Any external API that directly changes Operation.status is forbidden.
+
+FORBID-004:
+Any operation module that writes state directly is forbidden.
+
+FORBID-005:
+Any Read Model path that affects Ledger Core commit success is forbidden.
+
+FORBID-006:
+Any Gateway path that performs sufficient-funds logic as final authority is forbidden.
+
+FORBID-007:
+Any cross-canister call required for authoritative balance/journal commit is forbidden in MVP.
+
+FORBID-008:
+Any mutation path that bypasses idempotency control is forbidden.
+
+FORBID-009:
+Any mutation path that bypasses invariant checks is forbidden.
+
+FORBID-010:
+Any code path that rewrites journal history is forbidden.
+
+FORBID-011:
+Any runtime user API that creates arbitrary initial balances is forbidden.
+
+FORBID-012:
+Any code path that treats Read Model projection as source truth is forbidden.
+
+FORBID-013:
+Any code path that uses Gateway immediateCallerPrincipal as the user debit authority without verifying the authenticated external caller is forbidden.
+
+FORBID-014:
+Any user-body field named callerPrincipal, originalCallerPrincipal, debitAuthorityPrincipal, or equivalent trusted identity field is forbidden as an authority source.
+
+FORBID-015:
+Any MVP API or code path that accepts DEPOSIT or WITHDRAWAL as an executable operation is forbidden.
+
+FORBID-016:
+Any authoritative commit sequence that awaits an inter-canister call after mutation begins is forbidden.
+
+FORBID-017:
+Any response hash based on non-canonical object serialization is forbidden.
+
+FORBID-018:
+Any amount parser that accepts multiple non-normalized authoritative representations for the same value without canonicalization is forbidden.
+25. Test Proof Requirements
+25.1 Required Tests
+Test ID	Test	Proves
+TEST-001	Valid transfer commits	Happy path correctness
+TEST-002	Transfer creates debit and credit ledger entries	Traceability
+TEST-003	Duplicate transfer returns same result	Idempotency
+TEST-004	Duplicate transfer creates no duplicate ledger entries	Replay determinism
+TEST-005	Insufficient funds rejected	Non-negative balance
+TEST-006	Asset mismatch rejected	Asset symmetry
+TEST-007	Unknown source account rejected	Entity validation
+TEST-008	Unknown destination account rejected	Entity validation
+TEST-009	Unauthorized caller rejected	Ownership correctness
+TEST-010	Ledger entries cannot be mutated	Append-only audit
+TEST-011	Forced internal failure creates no partial commit	Atomicity
+TEST-012	Gateway cannot mutate balances	Boundary enforcement
+TEST-013	Operation module cannot write state	Kernel abstraction
+TEST-014	Read Model failure does not corrupt Ledger Core	Derived-state isolation
+TEST-015	Read Model rebuilds from Ledger Core journal	Projection rebuild proof
+TEST-016	Upgrade preserves balances and journal	ICP durability
+TEST-017	Post-upgrade invariant scan catches invalid state	Upgrade safety
+TEST-018	Timestamp consistency across commit records	Temporal anchoring
+TEST-019	Amount parser rejects invalid values	Amount correctness
+TEST-020	Bootstrap path cannot be used as runtime mutation API	Bootstrap isolation
+TEST-021	Gateway-mediated transfer preserves external caller identity	Caller authority correctness
+TEST-022	Ledger Core rejects untrusted Gateway envelope	Gateway trust boundary
+TEST-023	Ledger Core does not use Gateway principal as debit authority	Caller-principal bug prevention
+TEST-024	Stale IN_PROGRESS idempotency record cannot duplicate effects	Idempotency recovery
+TEST-025	Canonical response serialization is replay-stable	Replay equality and hashing
+TEST-026	Equivalent amount inputs normalize to same minor-unit value	Canonical amount semantics
+TEST-027	Commit path performs no inter-canister await during mutation	Atomicity boundary
+TEST-028	MVP rejects DEPOSIT and WITHDRAWAL operation submission	Transfer-only scope
+25.2 Test Acceptance Criteria
+TEST-001 passes only if:
+- source balance decreases by amount
+- destination balance increases by amount
+- operation status is COMMITTED
+- exactly two ledger entries exist
+- idempotency record is COMMITTED
+
+TEST-003 passes only if:
+- repeated request returns same operationId
+- repeated request returns same deterministic response
+- balances are changed only once
+
+TEST-005 passes only if:
+- source balance remains unchanged
+- destination balance remains unchanged
+- no COMMITTED operation exists
+- no ledger entries are created
+- rejection reason is deterministic
+
+TEST-009 passes only if:
+- debitAuthorityPrincipal not matching sourceAccount.ownerPrincipal is rejected
+- no balances are changed
+- no ledger entries are created
+- rejection reason is deterministic
+
+TEST-011 passes only if:
+- forced failure does not change source balance
+- forced failure does not change destination balance
+- no COMMITTED operation is visible
+- no orphan ledger entry is visible
+- no committed idempotency outcome is visible
+
+TEST-015 passes only if:
+- Read Model can rebuild balance projection from Ledger Core journal
+- rebuilt projection equals authoritative balance
+- freshness metadata advances to latest processed cursor
+
+TEST-016 passes only if:
+- committed operations survive upgrade
+- balances survive upgrade or are correctly reconstructed
+- ledger entries survive upgrade
+- idempotency outcomes survive upgrade
+- journal ordering is preserved
+
+TEST-018 passes only if:
+- Operation.createdAt
+- Operation.completedAt
+- LedgerEntry.createdAt
+- Balance.updatedAt
+- IdempotencyRecord.completedAt
+all use the canonical commit timestamp where applicable.
+
+TEST-021 passes only if:
+- Gateway reads originalCallerPrincipal from ICP execution context
+- Gateway constructs authenticatedEnvelope
+- Ledger Core verifies Gateway principal
+- Ledger Core stores and uses debitAuthorityPrincipal distinctly from immediateCallerPrincipal
+
+TEST-022 passes only if:
+- Ledger Core rejects authenticatedEnvelope from an unauthorized immediate caller
+- no balances are changed
+- no ledger entries are created
+- rejection reason is deterministic
+
+TEST-023 passes only if:
+- Gateway principal differs from sourceAccount.ownerPrincipal
+- originalCallerPrincipal equals sourceAccount.ownerPrincipal
+- Transfer commits only because originalCallerPrincipal/debitAuthorityPrincipal is verified
+- Transfer does not authorize using Gateway principal as user authority
+
+TEST-024 passes only if:
+- stale IN_PROGRESS cannot become duplicate COMMITTED effect
+- duplicate call receives canonical retry-safe response
+- balances remain changed zero or one time, never more
+- recovery state is inspectable
+
+TEST-025 passes only if:
+- repeated committed response serializes byte-equivalently
+- responseHash is equal across replay
+- field order and omitted fields are deterministic
+
+TEST-026 passes only if:
+- equivalent decimal inputs normalize to the same integer minor-unit value
+- invalid precision is rejected
+- authoritative math does not use floating point
+
+TEST-027 passes only if:
+- authoritative commit contains no inter-canister await after mutation begins
+- Read Model sync is not part of commit success
+- journal creation is local to Ledger Core
+
+TEST-028 passes only if:
+- DEPOSIT submission is rejected or absent
+- WITHDRAWAL submission is rejected or absent
+- no operation record, balance mutation, ledger entry, or idempotency outcome is committed for non-MVP operation types.
+26. Test-to-Invariant Mapping
+Invariant	Required Tests
+INV-001	TEST-001, TEST-002
+INV-002	TEST-010, TEST-016
+INV-003	TEST-003, TEST-004
+INV-004	TEST-011
+INV-005	TEST-005
+INV-006	TEST-006
+INV-007	TEST-012
+INV-008	TEST-014, TEST-015
+INV-009	TEST-013
+INV-010	TEST-012, TEST-013
+INV-011	TEST-002
+INV-012	TEST-014
+INV-013	TEST-016
+INV-014	TEST-009
+INV-015	TEST-018
+INV-016	TEST-019
+INV-017	TEST-020
+INV-018	TEST-016, TEST-017
+AUTH-004/AUTH-017	TEST-021, TEST-022, TEST-023
+IDEMP-015/IDEMP-024	TEST-024
+RESULT-009/RESULT-013	TEST-025
+AMOUNT-013/AMOUNT-018	TEST-026
+ATOMIC-008/ATOMIC-013	TEST-027
+OPER-001/OPER-003	TEST-028
+27. Highest-Value Falsifiers
+ID	Falsifier	Meaning
+FALSIFIER-001	Balance can change without a ledger entry	Core thesis fails
+FALSIFIER-002	Duplicate request creates duplicate effect	Idempotency fails
+FALSIFIER-003	Gateway can mutate balance	Authority boundary fails
+FALSIFIER-004	Read Model corruption changes Ledger Core truth	Source-of-truth boundary fails
+FALSIFIER-005	Operation module writes state directly	Kernel abstraction fails
+FALSIFIER-006	Upgrade loses journal history	ICP persistence model fails
+FALSIFIER-007	Upgrade rewrites journal history	Append-only guarantee fails
+FALSIFIER-008	Failed commit leaves partial state	Atomicity fails
+FALSIFIER-009	Separate Journal Canister is required for MVP correctness	Model A assumption fails
+FALSIFIER-010	Read Model is required for write success	Derived-state isolation fails
+FALSIFIER-011	Amount precision loss occurs	Ledger arithmetic model fails
+FALSIFIER-012	Bootstrap API can alter runtime balances	Authority boundary fails
+FALSIFIER-013	Ledger Core authorizes debit using Gateway principal instead of authenticated external user	Caller identity model fails
+FALSIFIER-014	Stale IN_PROGRESS can create duplicate balance effect	Idempotency recovery fails
+FALSIFIER-015	Same deterministic result serializes differently on replay	Canonical response model fails
+FALSIFIER-016	Equivalent amounts produce different authoritative minor-unit values	Amount model fails
+FALSIFIER-017	Commit awaits inter-canister call during mutation sequence	Atomicity model fails
+FALSIFIER-018	MVP accepts Deposit or Withdrawal operation submission	Transfer-only scope fails
+28. Definition of Done
+DONE-001:
+Transfer works through Gateway → Ledger Core.
+
+DONE-002:
+Ledger Core owns balances, operations, idempotency records, and journal entries.
+
+DONE-003:
+No separate Journal Canister exists.
+
+DONE-004:
+Valid transfer creates exactly two ledger entries.
+
+DONE-005:
+Duplicate transfer returns the same deterministic result.
+
+DONE-006:
+Duplicate transfer creates no duplicate balance effects.
+
+DONE-007:
+Insufficient funds are rejected.
+
+DONE-008:
+Unauthorized caller cannot debit source account.
+
+DONE-009:
+Gateway cannot mutate balances.
+
+DONE-010:
+Read Model cannot mutate authoritative state.
+
+DONE-011:
+Read Model can be rebuilt from Ledger Core journal.
+
+DONE-012:
+Ledger entries are append-only.
+
+DONE-013:
+Upgrade safety is documented.
+
+DONE-014:
+Post-upgrade invariant checks exist.
+
+DONE-015:
+All core invariants are mapped to tests.
+
+DONE-016:
+Forbidden APIs do not exist.
+
+DONE-017:
+README explains the correctness proof clearly.
+
+DONE-018:
+Demo shows failure cases, not only happy path.
+
+DONE-019:
+Amount math uses exact integer minor units.
+
+DONE-020:
+Bootstrap/demo state cannot bypass runtime Transfer invariants.
+
+DONE-021:
+Gateway-mediated caller identity is explicitly modeled and tested.
+
+DONE-022:
+Ledger Core distinguishes immediateCallerPrincipal from debitAuthorityPrincipal.
+
+DONE-023:
+IN_PROGRESS idempotency recovery behavior is source-defined and tested.
+
+DONE-024:
+Canonical response serialization and response hashing are source-defined and tested.
+
+DONE-025:
+Amount parsing normalizes to canonical integer minor units.
+
+DONE-026:
+Authoritative commit path performs no inter-canister await after mutation begins.
+
+DONE-027:
+MVP rejects or omits all non-Transfer operation submission paths.
+
+DONE-028:
+Upgrade migration has version-gated or idempotent maintenance-mode behavior.
+29. Governed Extraction Requirements
+
+EXTRACT-001:
+Generated SRC-* files MUST be strict GOV-compliant JSONL.
+
+EXTRACT-002:
+Each generated source record MUST contain exactly these GOV-00 fields: id, file, class, type, scope, authority_level, statement, violation, action, verification, trace.
+
+EXTRACT-003:
+Each generated source record MUST use the namespace owner defined by this report unless GOV-00 or SRC-INDEX defines a stricter owner.
+
+EXTRACT-004:
+Each correctness rule MUST map to exactly one owning SRC file.
+
+EXTRACT-005:
+Trace arrays MUST reference exact record ids after generation.
+
+EXTRACT-006:
+Reports, basis files, code, tests, README content, and chat history MUST NOT be used as higher authority than active GOV/SRC records.
+
+EXTRACT-007:
+If a source-basis statement cannot be converted into a traceable GOV-compliant record, generation MUST mark SOURCE_GAP or ROUTING_GAP rather than inventing semantics.
+
+EXTRACT-008:
+Generated SRC-* files MUST preserve the distinction between SOURCE_FACT, INFERENCE, ASSUMPTION, SOURCE_GAP, SOURCE_CONFLICT, ROUTING_GAP, IMPLEMENTATION_GUIDANCE_ONLY, STALE_ARTIFACT, and GOVERNANCE_DRIFT when producing reports.
+
+EXTRACT-009:
+The generated SRC-INDEX MUST include lookup routing from invariants to failure classes, operation/lifecycle rules, authority rules, API rules, upgrade rules, tests, and falsifiers.
+
+EXTRACT-010:
+The generated SRC-INDEX MUST not redefine source semantics owned by SRC-00 through SRC-10.
+
+30. BLD Generation Preconditions
+
+BLD-PRE-001:
+Do not generate BLD-* before GOV-00, SRC-INDEX, and SRC-00 through SRC-10 are generated and validated.
+
+BLD-PRE-002:
+BLD-* files MUST translate active SRC authority into implementation guidance and MUST NOT invent source authority.
+
+BLD-PRE-003:
+BLD-INDEX MUST define target-file routing, dependency legality, forbidden dependencies, output mode, and test/proof routing before target-specific BLD generation.
+
+BLD-PRE-004:
+Generated BLD guidance MUST include dependency legality for Gateway, Ledger Core, Read Model, stable memory, serialization, test harness, and Candid/API layers.
+
+BLD-PRE-005:
+Generated BLD guidance MUST define the Candid/API shape for authenticatedEnvelope and MUST forbid trusted caller identity fields from user body.
+
+BLD-PRE-006:
+Generated BLD guidance MUST assign stable memory collection ownership for accounts, assets, balances, operations, idempotency records, ledger entries, schema version, and maintenance mode.
+
+BLD-PRE-007:
+Generated BLD guidance MUST define test harness expectations for caller identity simulation, duplicate replay, stale IN_PROGRESS recovery, canonical serialization, exact amount parsing, no-await commit enforcement, and upgrade simulation.
+
+BLD-PRE-008:
+If target file, boundary owner, source refs, dependencies, mutation authority, transaction/commit authority, persistence authority, LedgerEntry authority, Balance authority, API exposure, proof tests, or output mode are unresolved, generation MUST stop as GENERATION_PACKET_INCOMPLETE.
+
+31. Final Source Generation Order
+
+Use this order:
+
+1. GOV-00
+2. ICP Ledger Source-Basis Report as SOURCE_BASIS / EXTRACTION_INPUT
+3. SRC-INDEX
+4. SRC-00 through SRC-10
+5. Validate SRC ownership, traceability, routing, and conflicts
+6. BLD-INDEX
+7. BLD-00 through BLD-10
+8. Validate BLD routing and dependency legality
+9. Code generation
+10. Tests
+11. README and proof documentation
+
+Do not generate BLD-* before SRC-* is generated and validated.
+
+Reason:
+
+BLD files must translate source authority.
+They must not invent source authority.
+
+32. Final Recommendation
+
+This report now contains enough source-basis material to generate the full SRC-* set after GOV-compliant extraction.
+
+The critical governed extraction inputs are:
+
+Source Extraction Map
+Single-owner ID Namespace Registry
+Project Non-Goals
+Gateway / Ledger Core Caller Identity Model
+Caller and Authorization Rules
+Bootstrap and Admin Authority
+Transfer-only MVP Scope
+Amount and Decimal Canonicalization Rules
+Journal Ordering and Identity Rules
+Operation Result Contract
+Canonical Response Serialization Rules
+Idempotency Edge-Case and IN_PROGRESS Recovery Rules
+Lifecycle Transition Rules
+Read Model Rebuild Contract
+Stable-State Authority Rules
+Upgrade Maintenance and Migration Rules
+API Semantics
+Forbidden Behavior Classes
+Test Acceptance Criteria
+Falsifiers
+BLD Generation Preconditions
+
+The highest-risk item that MUST be preserved in generated SRC records is the caller-identity distinction:
+
+immediateCallerPrincipal != originalCallerPrincipal in Gateway-mediated Ledger Core execution.
+
+Ledger Core may use originalCallerPrincipal as debitAuthorityPrincipal only after verifying the authorized Gateway envelope.
