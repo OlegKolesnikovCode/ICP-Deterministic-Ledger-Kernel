@@ -1,0 +1,691 @@
+{
+  "summary": {
+    "json_parse_errors": 0,
+    "duplicate_ids": 0,
+    "field_order_errors": 0,
+    "file_field_mismatches": 0,
+    "authority_level_errors": 1610,
+    "invalid_scope_records": 1720,
+    "unresolved_traces": 3452,
+    "self_traces": 0,
+    "unmapped_tests": 126,
+    "tests_without_acceptance_criteria": 147
+  },
+  "details": {
+    "parse_errors": [],
+    "duplicate_ids": [],
+    "field_order_errors": [],
+    "file_field_mismatches": [],
+    "authority_level_errors": [
+      {
+        "id": "PROJECT-FILE-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 1,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-RESPONSIBILITY-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 2,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-NAMESPACE-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 3,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-FILE-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 4,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-FILE-003",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 5,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-RESPONSIBILITY-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 6,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-NAMESPACE-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 7,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-IDENTITY-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 8,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-IDENTITY-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 9,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-IDENTITY-003",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 10,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-IDENTITY-004",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 11,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-IDENTITY-005",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 12,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-IDENTITY-006",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 13,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-IDENTITY-007",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 14,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-IDENTITY-008",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 15,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-THESIS-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 16,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-THESIS-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 17,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-THESIS-003",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 18,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-THESIS-004",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 19,
+        "authority_level": 2,
+        "expected": 1
+      },
+      {
+        "id": "PROJECT-THESIS-005",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 20,
+        "authority_level": 2,
+        "expected": 1
+      }
+    ],
+    "invalid_scope_records": [
+      {
+        "id": "PROJECT-FILE-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 1,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-RESPONSIBILITY-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 2,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-NAMESPACE-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 3,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-FILE-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 4,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-FILE-003",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 5,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-RESPONSIBILITY-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 6,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-NAMESPACE-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 7,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-IDENTITY-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 8,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-IDENTITY-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 9,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-IDENTITY-003",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 10,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-IDENTITY-004",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 11,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-IDENTITY-005",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 12,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-IDENTITY-006",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 13,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-IDENTITY-007",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 14,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-IDENTITY-008",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 15,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-THESIS-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 16,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-THESIS-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 17,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-THESIS-003",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 18,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-THESIS-004",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 19,
+        "bad_scope": "SRC-00"
+      },
+      {
+        "id": "PROJECT-THESIS-005",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 20,
+        "bad_scope": "SRC-00"
+      }
+    ],
+    "unresolved_traces": [
+      {
+        "id": "PROJECT-RESPONSIBILITY-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 2,
+        "missing_trace": "OWN-001"
+      },
+      {
+        "id": "PROJECT-RESPONSIBILITY-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 2,
+        "missing_trace": "OWN-002"
+      },
+      {
+        "id": "PROJECT-NAMESPACE-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 3,
+        "missing_trace": "NS-001"
+      },
+      {
+        "id": "PROJECT-NAMESPACE-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 3,
+        "missing_trace": "NS-003"
+      },
+      {
+        "id": "PROJECT-RESPONSIBILITY-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 6,
+        "missing_trace": "OWN-001"
+      },
+      {
+        "id": "PROJECT-RESPONSIBILITY-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 6,
+        "missing_trace": "OWN-002"
+      },
+      {
+        "id": "PROJECT-NAMESPACE-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 7,
+        "missing_trace": "NS-001"
+      },
+      {
+        "id": "PROJECT-NAMESPACE-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 7,
+        "missing_trace": "NS-003"
+      },
+      {
+        "id": "PROJECT-IDENTITY-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 8,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-IDENTITY-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 8,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-IDENTITY-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 9,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-IDENTITY-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 9,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-IDENTITY-003",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 10,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-IDENTITY-003",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 10,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-IDENTITY-004",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 11,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-IDENTITY-004",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 11,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-IDENTITY-005",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 12,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-IDENTITY-005",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 12,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-IDENTITY-006",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 13,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-IDENTITY-006",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 13,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-IDENTITY-007",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 14,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-IDENTITY-007",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 14,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-IDENTITY-008",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 15,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-IDENTITY-008",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 15,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 16,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 16,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 17,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 17,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-003",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 18,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-003",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 18,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-004",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 19,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-004",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 19,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-005",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 20,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-005",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 20,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-006",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 21,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-006",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 21,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-007",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 22,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-007",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 22,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-008",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 23,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-008",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 23,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-009",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 24,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-009",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 24,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-010",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 25,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-010",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 25,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-THESIS-011",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 26,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-THESIS-011",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 26,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-SCOPE-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 27,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-SCOPE-001",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 27,
+        "missing_trace": "BASIS-003"
+      },
+      {
+        "id": "PROJECT-SCOPE-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 28,
+        "missing_trace": "BASIS-001"
+      },
+      {
+        "id": "PROJECT-SCOPE-002",
+        "file": "SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+        "line": 28,
+        "missing_trace": "BASIS-003"
+      }
+    ],
+    "self_traces": [],
+    "unmapped_tests_sample": [
+      "TEST-007",
+      "TEST-008",
+      "TEST-ACCEPT-001",
+      "TEST-ACCEPT-002",
+      "TEST-ACCEPT-003",
+      "TEST-ACCEPT-004",
+      "TEST-ACCEPT-005",
+      "TEST-ACCEPT-006",
+      "TEST-ACCEPT-007",
+      "TEST-ACCEPT-008",
+      "TEST-ACCEPT-009",
+      "TEST-ACCEPT-010",
+      "TEST-ACCEPT-011",
+      "TEST-ACCEPT-012",
+      "TEST-ACCEPT-013",
+      "TEST-ACCEPT-014",
+      "TEST-ACCEPT-015",
+      "TEST-ACCEPT-016",
+      "TEST-ACCEPT-017",
+      "TEST-ACCEPT-018",
+      "TEST-ACCEPT-019",
+      "TEST-ACCEPT-020",
+      "TEST-ACCEPT-021",
+      "TEST-ACCEPT-022",
+      "TEST-ACCEPT-023",
+      "TEST-ACCEPT-024",
+      "TEST-ACCEPT-025",
+      "TEST-ACCEPT-026",
+      "TEST-ACCEPT-027",
+      "TEST-ACCEPT-028",
+      "TEST-ACCEPT-029",
+      "TEST-ACCEPT-030",
+      "TEST-ACCEPT-031",
+      "TEST-ACCEPT-032",
+      "TEST-ACCEPT-033",
+      "TEST-ACCEPT-034",
+      "TEST-ACCEPT-035",
+      "TEST-ACCEPT-036",
+      "TEST-ACCEPT-037",
+      "TEST-ACCEPT-038",
+      "TEST-ACCEPT-039",
+      "TEST-ACCEPT-040",
+      "TEST-ACCEPT-041",
+      "TEST-ACCEPT-042",
+      "TEST-ACCEPT-043",
+      "TEST-ACCEPT-044",
+      "TEST-ACCEPT-045",
+      "TEST-ACCEPT-046",
+      "TEST-ACCEPT-047",
+      "TEST-ACCEPT-048"
+    ],
+    "tests_without_acceptance_criteria_sample": [
+      "TEST-002",
+      "TEST-004",
+      "TEST-006",
+      "TEST-007",
+      "TEST-008",
+      "TEST-010",
+      "TEST-012",
+      "TEST-013",
+      "TEST-014",
+      "TEST-017",
+      "TEST-019",
+      "TEST-020",
+      "TEST-ACCEPT-001",
+      "TEST-ACCEPT-002",
+      "TEST-ACCEPT-003",
+      "TEST-ACCEPT-004",
+      "TEST-ACCEPT-005",
+      "TEST-ACCEPT-006",
+      "TEST-ACCEPT-007",
+      "TEST-ACCEPT-008",
+      "TEST-ACCEPT-009",
+      "TEST-ACCEPT-010",
+      "TEST-ACCEPT-011",
+      "TEST-ACCEPT-012",
+      "TEST-ACCEPT-013",
+      "TEST-ACCEPT-014",
+      "TEST-ACCEPT-015",
+      "TEST-ACCEPT-016",
+      "TEST-ACCEPT-017",
+      "TEST-ACCEPT-018",
+      "TEST-ACCEPT-019",
+      "TEST-ACCEPT-020",
+      "TEST-ACCEPT-021",
+      "TEST-ACCEPT-022",
+      "TEST-ACCEPT-023",
+      "TEST-ACCEPT-024",
+      "TEST-ACCEPT-025",
+      "TEST-ACCEPT-026",
+      "TEST-ACCEPT-027",
+      "TEST-ACCEPT-028",
+      "TEST-ACCEPT-029",
+      "TEST-ACCEPT-030",
+      "TEST-ACCEPT-031",
+      "TEST-ACCEPT-032",
+      "TEST-ACCEPT-033",
+      "TEST-ACCEPT-034",
+      "TEST-ACCEPT-035",
+      "TEST-ACCEPT-036",
+      "TEST-ACCEPT-037",
+      "TEST-ACCEPT-038"
+    ]
+  }
+}
