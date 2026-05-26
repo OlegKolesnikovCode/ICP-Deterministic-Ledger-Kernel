@@ -19,8 +19,8 @@
   "counts": {
     "blocking": 0,
     "errors": 0,
-    "warnings": 349,
-    "info": 1047
+    "warnings": 329,
+    "info": 1042
   },
   "issues": [
     {
@@ -33,105 +33,6 @@
       "expected": "Only GOV-00, SRC-INDEX, and SRC-00 through SRC-10 are validated in this phase.",
       "actual": "sources\\bld\\BLD-00__IMPLEMENTATION_IDENTITY__BUILD__GLOBAL.jsonl, sources\\bld\\BLD-INDEX__BUILD_TRACEABILITY__LOOKUP_ROUTING.jsonl",
       "suggested_fix": "Run BLD validation only in a later governed phase."
-    },
-    {
-      "severity": "WARNING",
-      "category": "SOURCE_RESPONSIBILITY_DRIFT",
-      "record_id": "DONE-002",
-      "file": "SRC-10",
-      "line_number": 213,
-      "problem": "SRC record asserts ownership over concepts normally owned by another SRC file.",
-      "expected": "idempotency belongs to SRC-04.",
-      "actual": "SRC-10 assertion: Ledger Core owns balances, operations, idempotency records, and journal entries.",
-      "suggested_fix": "Move the ownership assertion to the responsible file, or rewrite this as a trace/reference statement."
-    },
-    {
-      "severity": "WARNING",
-      "category": "SRC_INDEX_NON_ROUTING_LANGUAGE",
-      "record_id": "SRC-INDEX-GAP-001",
-      "file": "SRC-INDEX",
-      "line_number": 138,
-      "problem": "SRC-INDEX record does not clearly read as routing, lookup, namespace, validation, or escalation authority.",
-      "expected": "SRC-INDEX should not redefine source truth.",
-      "actual": "SOURCE_GAP applies when required source authority is missing.",
-      "suggested_fix": "Rewrite as routing/index authority or move source truth to the owning SRC file."
-    },
-    {
-      "severity": "WARNING",
-      "category": "SRC_INDEX_NON_ROUTING_LANGUAGE",
-      "record_id": "SRC-INDEX-GAP-003",
-      "file": "SRC-INDEX",
-      "line_number": 140,
-      "problem": "SRC-INDEX record does not clearly read as routing, lookup, namespace, validation, or escalation authority.",
-      "expected": "SRC-INDEX should not redefine source truth.",
-      "actual": "SOURCE_CONFLICT applies when two same-level or active source claims conflict.",
-      "suggested_fix": "Rewrite as routing/index authority or move source truth to the owning SRC file."
-    },
-    {
-      "severity": "WARNING",
-      "category": "SRC10_PREFIX_USAGE_AMBIGUOUS",
-      "record_id": "TEST-NAMESPACE-002",
-      "file": "SRC-10",
-      "line_number": 4,
-      "problem": "SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role.",
-      "expected": "TEST-* records use language related to test, proof, verify, verification, acceptance, coverage.",
-      "actual": "SRC-10 owns DONE-* record ids.",
-      "suggested_fix": "Clarify the record as test/proof, Definition of Done, falsifier, or risk authority."
-    },
-    {
-      "severity": "WARNING",
-      "category": "SRC10_PREFIX_USAGE_AMBIGUOUS",
-      "record_id": "TEST-NAMESPACE-003",
-      "file": "SRC-10",
-      "line_number": 5,
-      "problem": "SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role.",
-      "expected": "TEST-* records use language related to test, proof, verify, verification, acceptance, coverage.",
-      "actual": "SRC-10 owns FALSIFIER-* record ids.",
-      "suggested_fix": "Clarify the record as test/proof, Definition of Done, falsifier, or risk authority."
-    },
-    {
-      "severity": "WARNING",
-      "category": "SRC10_PREFIX_USAGE_AMBIGUOUS",
-      "record_id": "TEST-NAMESPACE-004",
-      "file": "SRC-10",
-      "line_number": 6,
-      "problem": "SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role.",
-      "expected": "TEST-* records use language related to test, proof, verify, verification, acceptance, coverage.",
-      "actual": "SRC-10 owns RISK-* record ids.",
-      "suggested_fix": "Clarify the record as test/proof, Definition of Done, falsifier, or risk authority."
-    },
-    {
-      "severity": "WARNING",
-      "category": "SRC10_PREFIX_USAGE_AMBIGUOUS",
-      "record_id": "TEST-FILE-002",
-      "file": "SRC-10",
-      "line_number": 7,
-      "problem": "SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role.",
-      "expected": "TEST-* records use language related to test, proof, verify, verification, acceptance, coverage.",
-      "actual": "SRC-10 is a SOURCE class governed file.",
-      "suggested_fix": "Clarify the record as test/proof, Definition of Done, falsifier, or risk authority."
-    },
-    {
-      "severity": "WARNING",
-      "category": "SRC10_PREFIX_USAGE_AMBIGUOUS",
-      "record_id": "TEST-FILE-003",
-      "file": "SRC-10",
-      "line_number": 8,
-      "problem": "SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role.",
-      "expected": "TEST-* records use language related to test, proof, verify, verification, acceptance, coverage.",
-      "actual": "SRC-10 has authority_level 2.",
-      "suggested_fix": "Clarify the record as test/proof, Definition of Done, falsifier, or risk authority."
-    },
-    {
-      "severity": "WARNING",
-      "category": "SRC10_PREFIX_USAGE_AMBIGUOUS",
-      "record_id": "TEST-SCOPE-001",
-      "file": "SRC-10",
-      "line_number": 9,
-      "problem": "SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role.",
-      "expected": "TEST-* records use language related to test, proof, verify, verification, acceptance, coverage.",
-      "actual": "SRC-10 must not define source truth owned by SRC-00 through SRC-09.",
-      "suggested_fix": "Clarify the record as test/proof, Definition of Done, falsifier, or risk authority."
     },
     {
       "severity": "INFO",
@@ -330,94 +231,6 @@
       "expected": "Important source records are normally routed, tested, or depended on downstream.",
       "actual": "0 inbound traces",
       "suggested_fix": "Review whether this is intentionally terminal or should be referenced by routing/tests/DoD."
-    },
-    {
-      "severity": "WARNING",
-      "category": "PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "PROJECT-SCOPE-001",
-      "file": "SRC-00",
-      "line_number": 27,
-      "problem": "Project scope record is not referenced by TEST-* or DONE-* records.",
-      "expected": "Project scope should normally be reflected in acceptance proof or DoD.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable."
-    },
-    {
-      "severity": "INFO",
-      "category": "SOURCE_RECORD_ZERO_INBOUND_TRACES",
-      "record_id": "PROJECT-SCOPE-002",
-      "file": "SRC-00",
-      "line_number": 28,
-      "problem": "Source record has zero inbound traces in the current SRC-only graph.",
-      "expected": "Important source records are normally routed, tested, or depended on downstream.",
-      "actual": "0 inbound traces",
-      "suggested_fix": "Review whether this is intentionally terminal or should be referenced by routing/tests/DoD."
-    },
-    {
-      "severity": "WARNING",
-      "category": "PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "PROJECT-SCOPE-002",
-      "file": "SRC-00",
-      "line_number": 28,
-      "problem": "Project scope record is not referenced by TEST-* or DONE-* records.",
-      "expected": "Project scope should normally be reflected in acceptance proof or DoD.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable."
-    },
-    {
-      "severity": "WARNING",
-      "category": "PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "PROJECT-SCOPE-003",
-      "file": "SRC-00",
-      "line_number": 29,
-      "problem": "Project scope record is not referenced by TEST-* or DONE-* records.",
-      "expected": "Project scope should normally be reflected in acceptance proof or DoD.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable."
-    },
-    {
-      "severity": "WARNING",
-      "category": "PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "PROJECT-SCOPE-004",
-      "file": "SRC-00",
-      "line_number": 30,
-      "problem": "Project scope record is not referenced by TEST-* or DONE-* records.",
-      "expected": "Project scope should normally be reflected in acceptance proof or DoD.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable."
-    },
-    {
-      "severity": "WARNING",
-      "category": "PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "PROJECT-SCOPE-005",
-      "file": "SRC-00",
-      "line_number": 31,
-      "problem": "Project scope record is not referenced by TEST-* or DONE-* records.",
-      "expected": "Project scope should normally be reflected in acceptance proof or DoD.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable."
-    },
-    {
-      "severity": "WARNING",
-      "category": "PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "PROJECT-SCOPE-006",
-      "file": "SRC-00",
-      "line_number": 32,
-      "problem": "Project scope record is not referenced by TEST-* or DONE-* records.",
-      "expected": "Project scope should normally be reflected in acceptance proof or DoD.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable."
-    },
-    {
-      "severity": "WARNING",
-      "category": "PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "PROJECT-SCOPE-007",
-      "file": "SRC-00",
-      "line_number": 33,
-      "problem": "Project scope record is not referenced by TEST-* or DONE-* records.",
-      "expected": "Project scope should normally be reflected in acceptance proof or DoD.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable."
     },
     {
       "severity": "INFO",
@@ -2941,28 +2754,6 @@
     {
       "severity": "INFO",
       "category": "SOURCE_RECORD_ZERO_INBOUND_TRACES",
-      "record_id": "INV-NAMESPACE-001",
-      "file": "SRC-05",
-      "line_number": 10,
-      "problem": "Source record has zero inbound traces in the current SRC-only graph.",
-      "expected": "Important source records are normally routed, tested, or depended on downstream.",
-      "actual": "0 inbound traces",
-      "suggested_fix": "Review whether this is intentionally terminal or should be referenced by routing/tests/DoD."
-    },
-    {
-      "severity": "WARNING",
-      "category": "INVARIANT_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "INV-NAMESPACE-001",
-      "file": "SRC-05",
-      "line_number": 10,
-      "problem": "Invariant record is not referenced by TEST-* or DONE-* records.",
-      "expected": "INV-* records should normally be covered by proof or Definition of Done records.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage or document why no proof routing is required."
-    },
-    {
-      "severity": "INFO",
-      "category": "SOURCE_RECORD_ZERO_INBOUND_TRACES",
       "record_id": "LEDGER-SCOPE-001",
       "file": "SRC-05",
       "line_number": 11,
@@ -3238,50 +3029,6 @@
     {
       "severity": "INFO",
       "category": "SOURCE_RECORD_ZERO_INBOUND_TRACES",
-      "record_id": "INV-OWNERSHIP-001",
-      "file": "SRC-05",
-      "line_number": 117,
-      "problem": "Source record has zero inbound traces in the current SRC-only graph.",
-      "expected": "Important source records are normally routed, tested, or depended on downstream.",
-      "actual": "0 inbound traces",
-      "suggested_fix": "Review whether this is intentionally terminal or should be referenced by routing/tests/DoD."
-    },
-    {
-      "severity": "WARNING",
-      "category": "INVARIANT_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "INV-OWNERSHIP-001",
-      "file": "SRC-05",
-      "line_number": 117,
-      "problem": "Invariant record is not referenced by TEST-* or DONE-* records.",
-      "expected": "INV-* records should normally be covered by proof or Definition of Done records.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage or document why no proof routing is required."
-    },
-    {
-      "severity": "INFO",
-      "category": "SOURCE_RECORD_ZERO_INBOUND_TRACES",
-      "record_id": "INV-VALIDATION-006",
-      "file": "SRC-05",
-      "line_number": 126,
-      "problem": "Source record has zero inbound traces in the current SRC-only graph.",
-      "expected": "Important source records are normally routed, tested, or depended on downstream.",
-      "actual": "0 inbound traces",
-      "suggested_fix": "Review whether this is intentionally terminal or should be referenced by routing/tests/DoD."
-    },
-    {
-      "severity": "WARNING",
-      "category": "INVARIANT_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "INV-VALIDATION-006",
-      "file": "SRC-05",
-      "line_number": 126,
-      "problem": "Invariant record is not referenced by TEST-* or DONE-* records.",
-      "expected": "INV-* records should normally be covered by proof or Definition of Done records.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage or document why no proof routing is required."
-    },
-    {
-      "severity": "INFO",
-      "category": "SOURCE_RECORD_ZERO_INBOUND_TRACES",
       "record_id": "LEDGER-029",
       "file": "SRC-05",
       "line_number": 127,
@@ -3531,28 +3278,6 @@
       "expected": "Important source records are normally routed, tested, or depended on downstream.",
       "actual": "0 inbound traces",
       "suggested_fix": "Review whether this is intentionally terminal or should be referenced by routing/tests/DoD."
-    },
-    {
-      "severity": "INFO",
-      "category": "SOURCE_RECORD_ZERO_INBOUND_TRACES",
-      "record_id": "INV-AUTHORITY-004",
-      "file": "SRC-05",
-      "line_number": 150,
-      "problem": "Source record has zero inbound traces in the current SRC-only graph.",
-      "expected": "Important source records are normally routed, tested, or depended on downstream.",
-      "actual": "0 inbound traces",
-      "suggested_fix": "Review whether this is intentionally terminal or should be referenced by routing/tests/DoD."
-    },
-    {
-      "severity": "WARNING",
-      "category": "INVARIANT_NOT_REFERENCED_BY_TEST_OR_DONE",
-      "record_id": "INV-AUTHORITY-004",
-      "file": "SRC-05",
-      "line_number": 150,
-      "problem": "Invariant record is not referenced by TEST-* or DONE-* records.",
-      "expected": "INV-* records should normally be covered by proof or Definition of Done records.",
-      "actual": "no TEST-/DONE- inbound trace",
-      "suggested_fix": "Add SRC-10 proof/DoD coverage or document why no proof routing is required."
     },
     {
       "severity": "INFO",

@@ -5,23 +5,14 @@
 - Records checked: 1904
 - Blocking issues: 0
 - Errors: 0
-- Warnings: 349
-- Info: 1047
+- Warnings: 329
+- Info: 1042
 
 ## Issue Table
 
 | Severity | Category | Record | File | Line | Problem | Suggested fix |
 | --- | --- | --- | --- | --- | --- | --- |
 | INFO | BLD_FILES_IGNORED |  |  |  | BLD files detected but ignored by SRC-only validator. | Run BLD validation only in a later governed phase. |
-| WARNING | SOURCE_RESPONSIBILITY_DRIFT | DONE-002 | SRC-10 | 213 | SRC record asserts ownership over concepts normally owned by another SRC file. | Move the ownership assertion to the responsible file, or rewrite this as a trace/reference statement. |
-| WARNING | SRC_INDEX_NON_ROUTING_LANGUAGE | SRC-INDEX-GAP-001 | SRC-INDEX | 138 | SRC-INDEX record does not clearly read as routing, lookup, namespace, validation, or escalation authority. | Rewrite as routing/index authority or move source truth to the owning SRC file. |
-| WARNING | SRC_INDEX_NON_ROUTING_LANGUAGE | SRC-INDEX-GAP-003 | SRC-INDEX | 140 | SRC-INDEX record does not clearly read as routing, lookup, namespace, validation, or escalation authority. | Rewrite as routing/index authority or move source truth to the owning SRC file. |
-| WARNING | SRC10_PREFIX_USAGE_AMBIGUOUS | TEST-NAMESPACE-002 | SRC-10 | 4 | SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role. | Clarify the record as test/proof, Definition of Done, falsifier, or risk authority. |
-| WARNING | SRC10_PREFIX_USAGE_AMBIGUOUS | TEST-NAMESPACE-003 | SRC-10 | 5 | SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role. | Clarify the record as test/proof, Definition of Done, falsifier, or risk authority. |
-| WARNING | SRC10_PREFIX_USAGE_AMBIGUOUS | TEST-NAMESPACE-004 | SRC-10 | 6 | SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role. | Clarify the record as test/proof, Definition of Done, falsifier, or risk authority. |
-| WARNING | SRC10_PREFIX_USAGE_AMBIGUOUS | TEST-FILE-002 | SRC-10 | 7 | SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role. | Clarify the record as test/proof, Definition of Done, falsifier, or risk authority. |
-| WARNING | SRC10_PREFIX_USAGE_AMBIGUOUS | TEST-FILE-003 | SRC-10 | 8 | SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role. | Clarify the record as test/proof, Definition of Done, falsifier, or risk authority. |
-| WARNING | SRC10_PREFIX_USAGE_AMBIGUOUS | TEST-SCOPE-001 | SRC-10 | 9 | SRC-10 record prefix usage is not clearly constrained to its proof/risk/DoD role. | Clarify the record as test/proof, Definition of Done, falsifier, or risk authority. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | PROJECT-NAMESPACE-001 | SRC-00 | 3 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | PROJECT-FILE-002 | SRC-00 | 4 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | PROJECT-FILE-003 | SRC-00 | 5 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
@@ -40,14 +31,6 @@
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | PROJECT-THESIS-004 | SRC-00 | 19 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | PROJECT-THESIS-006 | SRC-00 | 21 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | PROJECT-THESIS-010 | SRC-00 | 25 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
-| WARNING | PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE | PROJECT-SCOPE-001 | SRC-00 | 27 | Project scope record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable. |
-| INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | PROJECT-SCOPE-002 | SRC-00 | 28 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
-| WARNING | PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE | PROJECT-SCOPE-002 | SRC-00 | 28 | Project scope record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable. |
-| WARNING | PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE | PROJECT-SCOPE-003 | SRC-00 | 29 | Project scope record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable. |
-| WARNING | PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE | PROJECT-SCOPE-004 | SRC-00 | 30 | Project scope record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable. |
-| WARNING | PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE | PROJECT-SCOPE-005 | SRC-00 | 31 | Project scope record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable. |
-| WARNING | PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE | PROJECT-SCOPE-006 | SRC-00 | 32 | Project scope record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable. |
-| WARNING | PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE | PROJECT-SCOPE-007 | SRC-00 | 33 | Project scope record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage if the scope is intended to be enforceable. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | PROJECT-NONGOAL-001 | SRC-00 | 34 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | PROJECT-NONGOAL-002 | SRC-00 | 35 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | PROJECT-NONGOAL-003 | SRC-00 | 36 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
@@ -277,8 +260,6 @@
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | TIME-NAMESPACE-001 | SRC-05 | 7 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | ATOMIC-NAMESPACE-001 | SRC-05 | 8 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | COMMIT-NAMESPACE-001 | SRC-05 | 9 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
-| INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | INV-NAMESPACE-001 | SRC-05 | 10 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
-| WARNING | INVARIANT_NOT_REFERENCED_BY_TEST_OR_DONE | INV-NAMESPACE-001 | SRC-05 | 10 | Invariant record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage or document why no proof routing is required. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | LEDGER-SCOPE-001 | SRC-05 | 11 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | LEDGER-004 | SRC-05 | 15 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | LEDGER-005 | SRC-05 | 16 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
@@ -304,10 +285,6 @@
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | COMMIT-008 | SRC-05 | 90 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | COMMIT-009 | SRC-05 | 91 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | COMMIT-015 | SRC-05 | 97 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
-| INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | INV-OWNERSHIP-001 | SRC-05 | 117 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
-| WARNING | INVARIANT_NOT_REFERENCED_BY_TEST_OR_DONE | INV-OWNERSHIP-001 | SRC-05 | 117 | Invariant record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage or document why no proof routing is required. |
-| INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | INV-VALIDATION-006 | SRC-05 | 126 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
-| WARNING | INVARIANT_NOT_REFERENCED_BY_TEST_OR_DONE | INV-VALIDATION-006 | SRC-05 | 126 | Invariant record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage or document why no proof routing is required. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | LEDGER-029 | SRC-05 | 127 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | LEDGER-030 | SRC-05 | 128 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | LEDGER-031 | SRC-05 | 129 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
@@ -331,8 +308,6 @@
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | LEDGER-AUTHORITY-002 | SRC-05 | 147 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | LEDGER-AUTHORITY-003 | SRC-05 | 148 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | LEDGER-AUTHORITY-004 | SRC-05 | 149 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
-| INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | INV-AUTHORITY-004 | SRC-05 | 150 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
-| WARNING | INVARIANT_NOT_REFERENCED_BY_TEST_OR_DONE | INV-AUTHORITY-004 | SRC-05 | 150 | Invariant record is not referenced by TEST-* or DONE-* records. | Add SRC-10 proof/DoD coverage or document why no proof routing is required. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | ATOMIC-AUTHORITY-001 | SRC-05 | 151 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | TIME-AUTHORITY-001 | SRC-05 | 152 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
 | INFO | SOURCE_RECORD_ZERO_INBOUND_TRACES | COMMIT-AUTHORITY-001 | SRC-05 | 153 | Source record has zero inbound traces in the current SRC-only graph. | Review whether this is intentionally terminal or should be referenced by routing/tests/DoD. |
@@ -1411,12 +1386,7 @@
 
 ## Recommended Repair Order
 
-- WARNING: SOURCE_RESPONSIBILITY_DRIFT (1)
-- WARNING: SRC_INDEX_NON_ROUTING_LANGUAGE (2)
-- WARNING: SRC10_PREFIX_USAGE_AMBIGUOUS (6)
-- WARNING: PROJECT_SCOPE_NOT_REFERENCED_BY_TEST_OR_DONE (7)
-- WARNING: INVARIANT_NOT_REFERENCED_BY_TEST_OR_DONE (4)
 - WARNING: FAILURE_RULE_NOT_REFERENCED (121)
 - WARNING: API_RULE_NOT_ROUTED_OR_TESTED (208)
 - INFO: BLD_FILES_IGNORED (1)
-- INFO: SOURCE_RECORD_ZERO_INBOUND_TRACES (1046)
+- INFO: SOURCE_RECORD_ZERO_INBOUND_TRACES (1041)
