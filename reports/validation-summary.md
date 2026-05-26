@@ -1,8 +1,8 @@
-# SRC Validation Summary
+# Combined Validation Summary
 
 - Verdict: WARNING_ONLY
-- Files checked: 13
-- Records checked: 1914
+- Files checked: 16
+- Records checked: 2179
 - Blocking issues: 0
 - Errors: 0
 - Warnings: 329

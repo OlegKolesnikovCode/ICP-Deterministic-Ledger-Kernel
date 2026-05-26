@@ -22,11 +22,11 @@ def _repair_order(issues: list[ValidationIssue]) -> list[str]:
     return categories
 
 
-def render_markdown_report(report: ValidationReport) -> str:
+def render_markdown_report(report: ValidationReport, title: str = "SRC Validation Summary") -> str:
     counts = report.counts_by_severity
     category_counts = Counter(issue.category for issue in report.issues)
     lines = [
-        "# SRC Validation Summary",
+        f"# {title}",
         "",
         f"- Verdict: {report.verdict}",
         f"- Files checked: {len(report.checked_files)}",
@@ -73,6 +73,5 @@ def render_markdown_report(report: ValidationReport) -> str:
     return "\n".join(lines)
 
 
-def write_markdown_report(report: ValidationReport, path: Path) -> None:
-    path.write_text(render_markdown_report(report), encoding="utf-8")
-
+def write_markdown_report(report: ValidationReport, path: Path, title: str = "SRC Validation Summary") -> None:
+    path.write_text(render_markdown_report(report, title), encoding="utf-8")
