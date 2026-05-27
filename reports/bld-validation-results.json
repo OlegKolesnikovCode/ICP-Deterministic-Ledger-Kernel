@@ -19,9 +19,10 @@
     "sources\\bld\\BLD-04__IDEMPOTENCY_REPLAY_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
     "sources\\bld\\BLD-05__LEDGER_JOURNAL_COMMIT_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
     "sources\\bld\\BLD-09__API_SURFACE_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources\\bld\\BLD-10__TEST_PROOF_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
     "sources\\bld\\BLD-INDEX__BUILD_TRACEABILITY__LOOKUP_ROUTING.jsonl"
   ],
-  "checked_records": 2422,
+  "checked_records": 2523,
   "counts": {
     "blocking": 0,
     "errors": 0,
