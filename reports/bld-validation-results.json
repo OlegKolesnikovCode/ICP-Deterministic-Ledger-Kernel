@@ -16,10 +16,11 @@
     "sources\\src\\SRC-10__TEST_PROOF_REQUIREMENTS__SOURCE__SYSTEM.jsonl",
     "sources\\bld\\BLD-00__IMPLEMENTATION_IDENTITY__BUILD__GLOBAL.jsonl",
     "sources\\bld\\BLD-03__TRANSFER_PIPELINE_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources\\bld\\BLD-04__IDEMPOTENCY_REPLAY_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
     "sources\\bld\\BLD-05__LEDGER_JOURNAL_COMMIT_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
     "sources\\bld\\BLD-INDEX__BUILD_TRACEABILITY__LOOKUP_ROUTING.jsonl"
   ],
-  "checked_records": 2257,
+  "checked_records": 2341,
   "counts": {
     "blocking": 0,
     "errors": 0,
