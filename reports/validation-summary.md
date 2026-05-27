@@ -1,8 +1,8 @@
 # Combined Validation Summary
 
 - Verdict: WARNING_ONLY
-- Files checked: 20
-- Records checked: 2523
+- Files checked: 22
+- Records checked: 2745
 - Blocking issues: 0
 - Errors: 0
 - Warnings: 329
