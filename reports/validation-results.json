@@ -5,6 +5,7 @@
     "sources\\bld\\BLD-03__TRANSFER_PIPELINE_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
     "sources\\bld\\BLD-04__IDEMPOTENCY_REPLAY_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
     "sources\\bld\\BLD-05__LEDGER_JOURNAL_COMMIT_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources\\bld\\BLD-09__API_SURFACE_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
     "sources\\bld\\BLD-INDEX__BUILD_TRACEABILITY__LOOKUP_ROUTING.jsonl",
     "sources\\gov\\GOV-00__SOURCE_CONSTITUTION__GOVERNANCE__GLOBAL.jsonl",
     "sources\\src\\SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
@@ -20,7 +21,7 @@
     "sources\\src\\SRC-10__TEST_PROOF_REQUIREMENTS__SOURCE__SYSTEM.jsonl",
     "sources\\src\\SRC-INDEX__SOURCE_TRACEABILITY__LOOKUP_ROUTING.jsonl"
   ],
-  "checked_records": 2341,
+  "checked_records": 2422,
   "counts": {
     "blocking": 0,
     "errors": 0,
@@ -36,7 +37,7 @@
       "line_number": null,
       "problem": "BLD files detected but ignored by SRC-only validator.",
       "expected": "Only GOV-00, SRC-INDEX, and SRC-00 through SRC-10 are validated in this phase.",
-      "actual": "sources\\bld\\BLD-00__IMPLEMENTATION_IDENTITY__BUILD__GLOBAL.jsonl, sources\\bld\\BLD-03__TRANSFER_PIPELINE_IMPLEMENTATION__BUILD__SYSTEM.jsonl, sources\\bld\\BLD-04__IDEMPOTENCY_REPLAY_IMPLEMENTATION__BUILD__SYSTEM.jsonl, sources\\bld\\BLD-05__LEDGER_JOURNAL_COMMIT_IMPLEMENTATION__BUILD__SYSTEM.jsonl, sources\\bld\\BLD-INDEX__BUILD_TRACEABILITY__LOOKUP_ROUTING.jsonl",
+      "actual": "sources\\bld\\BLD-00__IMPLEMENTATION_IDENTITY__BUILD__GLOBAL.jsonl, sources\\bld\\BLD-03__TRANSFER_PIPELINE_IMPLEMENTATION__BUILD__SYSTEM.jsonl, sources\\bld\\BLD-04__IDEMPOTENCY_REPLAY_IMPLEMENTATION__BUILD__SYSTEM.jsonl, sources\\bld\\BLD-05__LEDGER_JOURNAL_COMMIT_IMPLEMENTATION__BUILD__SYSTEM.jsonl, sources\\bld\\BLD-09__API_SURFACE_IMPLEMENTATION__BUILD__SYSTEM.jsonl, sources\\bld\\BLD-INDEX__BUILD_TRACEABILITY__LOOKUP_ROUTING.jsonl",
       "suggested_fix": "Run BLD validation only in a later governed phase."
     },
     {
