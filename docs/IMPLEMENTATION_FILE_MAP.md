@@ -1,0 +1,38 @@
+# Implementation File Map
+
+Status: PRE_CODE_HARNESS_ONLY.
+
+This document is a control artifact for future implementation files. It does not create product code and does not authorize behavior beyond active GOV/SRC/BLD records.
+
+Current implementation inventory: no kernel implementation modules exist yet.
+
+Every implementation file created in later phases must be added to this map in the same phase that creates or modifies it. Required verification may be a direct test, static script check, runtime dfx verification step, invariant/proof test, or an explicit blocker.
+
+| File | Phase | Governed By | May Import | Must Not Import | Required Verification |
+|---|---|---|---|---|---|
+| `dfx.json` | ICP Skeleton and Build Harness | `GOV-00`, `SRC-00`, `BLD-00`, `BLD-10` | n/a | unsupported operation canisters, demo UI canisters before deferred stage | `scripts/verify.ps1`, `dfx build` when project skeleton exists |
+| `canisters/ledger_kernel/src/Main.mo` | ICP Skeleton and Build Harness | `SRC-00`, `SRC-09`, `BLD-00`, `BLD-09` | `api/PublicApi`, non-mutating health/status helpers | `balances/BalanceStore`, `ledger/LedgerJournal`, direct state mutation helpers | forbidden API scan, Candid/API surface scan, route-through-executor proof when public API exists |
+| `canisters/ledger_kernel/src/domain/Types.mo` | Domain, Failure, and Stable State Model | `SRC-02`, `SRC-03`, `SRC-05`, `BLD-02` | constants and governed shared type definitions | API modules, balance mutation modules, ledger mutation modules | domain compile/type checks, unsupported operation scan, transfer-state scan |
+| `canisters/ledger_kernel/src/domain/Errors.mo` | Domain, Failure, and Stable State Model | `SRC-06`, `SRC-10`, `BLD-06`, `BLD-10` | governed domain type definitions | invented failure classes, runtime exception authority | failure-code coverage checks, deterministic rejection proof mapping |
+| `canisters/ledger_kernel/src/domain/Constants.mo` | Domain, Failure, and Stable State Model | `SRC-00`, `SRC-02`, `SRC-03`, `BLD-00`, `BLD-02` | governed type definitions | unsupported operation constants, convenience API names | unsupported operation scan, authority trace review |
+| `canisters/ledger_kernel/src/state/StateTypes.mo` | Domain, Failure, and Stable State Model | `SRC-02`, `SRC-04`, `SRC-05`, `SRC-08`, `BLD-02`, `BLD-08` | domain types, stable-state types | API modules, transient-only correctness state | stable-state verification, implementation file map check |
+| `canisters/ledger_kernel/src/state/StableState.mo` | Domain, Failure, and Stable State Model | `SRC-02`, `SRC-04`, `SRC-05`, `SRC-08`, `BLD-02`, `BLD-08` | domain types, state types | public API modules, read model authority, non-stable-only correctness state | stable-state preservation test or blocker, module coverage check |
+| `canisters/ledger_kernel/src/upgrade/UpgradeHooks.mo` | Domain, Failure, and Stable State Model | `SRC-08`, `SRC-05`, `SRC-04`, `BLD-08` | state types, invariant checks | journal rewrite/delete paths, runtime balance mutation API | upgrade hook compile check, post-upgrade invariant proof or blocker |
+| `canisters/ledger_kernel/src/authority/CanisterAuthority.mo` | Canister Authority Boundary | `SRC-01`, `SRC-09`, `BLD-01`, `BLD-09` | domain identity types, authorized gateway registry if governed | request-body trusted identity fields, balance or ledger stores | authorized/unauthorized caller proof, trusted identity body-field scan |
+| `canisters/ledger_kernel/src/transfer/TransferTypes.mo` | Transfer Validation and Lifecycle | `SRC-02`, `SRC-03`, `SRC-06`, `BLD-03` | domain types, failure codes | balance mutation modules, ledger append modules | transfer request shape checks, unsupported operation scan |
+| `canisters/ledger_kernel/src/transfer/TransferValidation.mo` | Transfer Validation and Lifecycle | `SRC-02`, `SRC-03`, `SRC-06`, `BLD-03`, `BLD-06` | domain types, failure codes, authority result types | balance mutation, ledger append, idempotency outcome writes | malformed request tests, amount tests, asset/account rejection tests |
+| `canisters/ledger_kernel/src/transfer/TransferLifecycle.mo` | Transfer Validation and Lifecycle | `SRC-03`, `SRC-06`, `BLD-03`, `BLD-06` | transfer types, failure codes | arbitrary setters, balance mutation, ledger append | lifecycle transition tests, arbitrary state setter scan |
+| `canisters/ledger_kernel/src/balances/BalanceStore.mo` | Balance Control | `SRC-02`, `SRC-08`, `BLD-02`, `BLD-08` | state types, domain types | public API modules, ledger journal, transfer validation shortcuts | file ownership map check, no public direct mutation scan |
+| `canisters/ledger_kernel/src/balances/BalanceControl.mo` | Balance Control | `SRC-02`, `SRC-03`, `SRC-05`, `SRC-06`, `BLD-03`, `BLD-06` | domain types, balance store, failure codes | public API modules, ledger journal direct append | insufficient funds, no-negative-balance, asset mismatch, direct mutation scan |
+| `canisters/ledger_kernel/src/ledger/LedgerEntry.mo` | Ledger Journal | `SRC-05`, `SRC-02`, `BLD-05` | domain types | public API modules, balance mutation modules | ledger entry type checks, traceability proof |
+| `canisters/ledger_kernel/src/ledger/LedgerJournal.mo` | Ledger Journal | `SRC-05`, `SRC-06`, `SRC-10`, `BLD-05` | ledger entry types, stable state | public API modules, balance store direct mutation | append-only test, rewrite/delete scan, transfer traceability test |
+| `canisters/ledger_kernel/src/idempotency/IdempotencyStore.mo` | Idempotency and Replay | `SRC-04`, `SRC-08`, `BLD-04`, `BLD-08` | domain types, stable state | public API modules, balance store, ledger journal | duplicate replay persistence checks, stable-state coverage |
+| `canisters/ledger_kernel/src/idempotency/Replay.mo` | Idempotency and Replay | `SRC-04`, `SRC-03`, `SRC-06`, `BLD-04`, `BLD-06` | idempotency store, canonical result types | balance mutation, ledger append, public API direct mutation | duplicate success replay, duplicate rejection replay, duplicate re-execution scan |
+| `canisters/ledger_kernel/src/transfer/TransferExecutor.mo` | Transfer Executor / Consistency Boundary | `SRC-01`, `SRC-02`, `SRC-03`, `SRC-04`, `SRC-05`, `SRC-06`, `BLD-01`, `BLD-03`, `BLD-04`, `BLD-05`, `BLD-06` | authority, validation, lifecycle, balance control, ledger journal, idempotency | inter-canister await, public API shortcuts, read model dependency for commit success | happy path, rejection no-mutation, replay, no partial commit, no-await scan |
+| `canisters/ledger_kernel/src/read_model/ReadModel.mo` | Read Model | `SRC-07`, `SRC-05`, `SRC-09`, `BLD-07`, `BLD-09` | stable read access, ledger query helpers | balance mutation, ledger append, transfer executor commit path | read derivation test, no mutation scan, projection non-authority proof |
+| `canisters/ledger_kernel/src/api/PublicApi.mo` | Public API and Candid Surface Lock | `SRC-01`, `SRC-03`, `SRC-04`, `SRC-05`, `SRC-09`, `BLD-01`, `BLD-09` | transfer executor, read model, authority wrapper | `balances/BalanceStore`, `ledger/LedgerJournal`, direct state mutation modules | forbidden API scan, Candid allowlist scan, route-through-executor proof |
+| `canisters/ledger_kernel/ledger_kernel.did` | Public API and Candid Surface Lock | `SRC-09`, `SRC-10`, `BLD-09`, `BLD-10` | n/a | forbidden APIs, non-Transfer mutation submissions | Candid/API surface scan, forbidden API scan |
+
+## Current Pre-Code Verification State
+
+No current implementation files require mapping. Future phases must update this file before their phase can pass `scripts/check-file-ownership-map.ps1` and `scripts/check-module-test-coverage.ps1`.
