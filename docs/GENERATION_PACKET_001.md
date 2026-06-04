@@ -231,13 +231,14 @@ The next implementation task must verify:
 - BLD validators still pass.
 - Source validator unit tests pass.
 - `scripts/verify.ps1` runs after the skeleton exists.
-- `dfx build` runs through `scripts/verify.ps1` because `dfx.json` will exist.
+- `dfx build --check` runs through `scripts/verify.ps1` because `dfx.json` will exist.
 - `scripts/check-forbidden-api.ps1` does not find forbidden API names.
 - `scripts/check-forbidden-internal-patterns.ps1` does not find forbidden internal patterns.
 - `scripts/check-no-await-consistency-boundary.ps1` remains `NOT_APPLICABLE` unless a transfer consistency-boundary file is incorrectly created, which is forbidden for this target.
 - `scripts/check-candid-api-surface.ps1` passes or remains `NOT_APPLICABLE` depending on whether `Main.mo` exposes any public method.
 - `scripts/check-file-ownership-map.ps1` passes with the new skeleton files mapped.
 - `scripts/check-module-test-coverage.ps1` passes with verification obligations mapped for `dfx.json` and `Main.mo`.
+- Direct `dfx build` remains a later local deployment proof when it requires a local canister id.
 - `git diff --check` passes.
 
 ## 13. Required implementation file map updates
@@ -252,7 +253,7 @@ The map rows must retain:
 - owning phase: `ICP Skeleton and Build Harness`
 - governing authority: `GOV-00`, `SRC-00`, and applicable `SRC-09`, `BLD-00`, `BLD-09`, `BLD-10`
 - forbidden dependencies on stores, journals, direct state mutation helpers, demo UI canisters, and unsupported operation canisters
-- required verification through `scripts/verify.ps1`, `dfx build`, forbidden API scan, Candid/API scan where applicable, file ownership map check, and module coverage check
+- required verification through `scripts/verify.ps1`, `dfx build --check`, forbidden API scan, Candid/API scan where applicable, file ownership map check, and module coverage check
 
 ## 14. Pre-generation verification commands
 
@@ -285,7 +286,7 @@ python -B tools\source_validator\validate_bld.py --sources sources --reports rep
 python -B tools\source_validator\validate_all.py --sources sources --reports reports
 python -B -m unittest discover -s tools\source_validator\tests
 powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
-dfx build
+dfx build --check
 git diff --check
 ```
 
@@ -294,7 +295,8 @@ Expected post-generation result:
 - SRC validation may remain `WARNING_ONLY` only for the existing warning classes triaged below.
 - BLD validation must pass.
 - `scripts/verify.ps1` must run and must not fail.
-- `dfx build` must pass when run directly and through `scripts/verify.ps1`.
+- `dfx build --check` must pass when run directly and through `scripts/verify.ps1`.
+- Direct `dfx build` is not a Stage 2 blocker when its only failure is missing local canister ID or local replica/deployment setup.
 - Forbidden API and forbidden internal pattern checks must pass against the created skeleton files.
 - Candid/API surface check must pass if `Main.mo` exists.
 - File ownership map and module test coverage checks must pass.
@@ -305,7 +307,7 @@ Expected post-generation result:
 The future implementation task fails if:
 
 - Any command above exits nonzero, except validator `WARNING_ONLY` explicitly limited to the existing warning triage below.
-- `dfx build` is unavailable or fails after `dfx.json` is created.
+- `dfx build --check` is unavailable or fails after `dfx.json` is created.
 - `Main.mo` exposes a forbidden API or balance-affecting update method.
 - `Main.mo` imports or references balance, ledger, idempotency, transfer executor, read model, state mutation, or future-stage modules.
 - `dfx.json` defines extra canisters, demo clients, unsupported operation canisters, or non-kernel runtime surfaces.
@@ -391,9 +393,10 @@ Task:
 4. Keep Main.mo non-mutating and free of ledger, transfer, balance, authority, idempotency, persistence, read model, and public API implementation logic.
 5. Update docs/IMPLEMENTATION_FILE_MAP.md only if needed for the files created or modified.
 6. Run the post-generation verification commands from docs/GENERATION_PACKET_001.md.
-7. Patch only failures within this stage scope.
-8. End with the full AGENTS.md final phase report format.
+7. Run direct `dfx build` separately for evidence; classify missing local canister ID or local replica/deployment setup as deferred to local deployment proof.
+8. Patch only failures within this stage scope.
+9. End with the full AGENTS.md final phase report format.
 
 Expected status:
-The phase may be PASS only if scripts/verify.ps1 and dfx build run successfully and all applicable scans pass. Existing SRC warnings may remain WARNING_ONLY only for the triaged warning classes in docs/GENERATION_PACKET_001.md.
+The phase may be PASS only if scripts/verify.ps1 and dfx build --check run successfully and all applicable scans pass. Existing SRC warnings may remain WARNING_ONLY only for the triaged warning classes in docs/GENERATION_PACKET_001.md.
 ```

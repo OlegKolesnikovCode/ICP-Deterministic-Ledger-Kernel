@@ -1,17 +1,17 @@
 # Implementation File Map
 
-Status: PRE_CODE_HARNESS_ONLY.
+Status: ICP_SKELETON_BUILD_HARNESS.
 
 This document is a control artifact for future implementation files. It does not create product code and does not authorize behavior beyond active GOV/SRC/BLD records.
 
-Current implementation inventory: no kernel implementation modules exist yet.
+Current implementation inventory: Stage 2 skeleton build harness only. No kernel behavior modules exist yet.
 
 Every implementation file created in later phases must be added to this map in the same phase that creates or modifies it. Required verification may be a direct test, static script check, runtime dfx verification step, invariant/proof test, or an explicit blocker.
 
 | File | Phase | Governed By | May Import | Must Not Import | Required Verification |
 |---|---|---|---|---|---|
-| `dfx.json` | ICP Skeleton and Build Harness | `GOV-00`, `SRC-00`, `BLD-00`, `BLD-10` | n/a | unsupported operation canisters, demo UI canisters before deferred stage | `scripts/verify.ps1`, `dfx build` when project skeleton exists |
-| `canisters/ledger_kernel/src/Main.mo` | ICP Skeleton and Build Harness | `SRC-00`, `SRC-09`, `BLD-00`, `BLD-09` | `api/PublicApi`, non-mutating health/status helpers | `balances/BalanceStore`, `ledger/LedgerJournal`, direct state mutation helpers | forbidden API scan, Candid/API surface scan, route-through-executor proof when public API exists |
+| `dfx.json` | ICP Skeleton and Build Harness | `GOV-00`, `SRC-00`, `BLD-00`, `BLD-10` | n/a | unsupported operation canisters, demo UI canisters before deferred stage | `scripts/verify.ps1`, `dfx build --check`, `scripts/check-file-ownership-map.ps1`, `scripts/check-module-test-coverage.ps1` |
+| `canisters/ledger_kernel/src/Main.mo` | ICP Skeleton and Build Harness | `SRC-00`, `SRC-09`, `BLD-00`, `BLD-09`, `BLD-10` | n/a for Stage 2 skeleton | `balances/BalanceStore`, `ledger/LedgerJournal`, direct state mutation helpers, transfer/balance/ledger/idempotency/read-model/public-API modules | `scripts/check-forbidden-api.ps1`, `scripts/check-forbidden-internal-patterns.ps1`, `scripts/check-candid-api-surface.ps1`, `scripts/check-file-ownership-map.ps1`, `scripts/check-module-test-coverage.ps1`, `scripts/verify.ps1`, `dfx build --check` |
 | `canisters/ledger_kernel/src/domain/Types.mo` | Domain, Failure, and Stable State Model | `SRC-02`, `SRC-03`, `SRC-05`, `BLD-02` | constants and governed shared type definitions | API modules, balance mutation modules, ledger mutation modules | domain compile/type checks, unsupported operation scan, transfer-state scan |
 | `canisters/ledger_kernel/src/domain/Errors.mo` | Domain, Failure, and Stable State Model | `SRC-06`, `SRC-10`, `BLD-06`, `BLD-10` | governed domain type definitions | invented failure classes, runtime exception authority | failure-code coverage checks, deterministic rejection proof mapping |
 | `canisters/ledger_kernel/src/domain/Constants.mo` | Domain, Failure, and Stable State Model | `SRC-00`, `SRC-02`, `SRC-03`, `BLD-00`, `BLD-02` | governed type definitions | unsupported operation constants, convenience API names | unsupported operation scan, authority trace review |
@@ -33,6 +33,6 @@ Every implementation file created in later phases must be added to this map in t
 | `canisters/ledger_kernel/src/api/PublicApi.mo` | Public API and Candid Surface Lock | `SRC-01`, `SRC-03`, `SRC-04`, `SRC-05`, `SRC-09`, `BLD-01`, `BLD-09` | transfer executor, read model, authority wrapper | `balances/BalanceStore`, `ledger/LedgerJournal`, direct state mutation modules | forbidden API scan, Candid allowlist scan, route-through-executor proof |
 | `canisters/ledger_kernel/ledger_kernel.did` | Public API and Candid Surface Lock | `SRC-09`, `SRC-10`, `BLD-09`, `BLD-10` | n/a | forbidden APIs, non-Transfer mutation submissions | Candid/API surface scan, forbidden API scan |
 
-## Current Pre-Code Verification State
+## Current Skeleton Verification State
 
-No current implementation files require mapping. Future phases must update this file before their phase can pass `scripts/check-file-ownership-map.ps1` and `scripts/check-module-test-coverage.ps1`.
+The current implementation files are limited to `dfx.json` and `canisters/ledger_kernel/src/Main.mo`. Stage 2 compile proof uses `dfx build --check`; direct `dfx build` is deferred when it requires local canister creation/deployment state. Future phases must update this file before their phase can pass `scripts/check-file-ownership-map.ps1` and `scripts/check-module-test-coverage.ps1`.

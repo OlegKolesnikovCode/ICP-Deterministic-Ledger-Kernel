@@ -1,0 +1,9 @@
+{
+  "canisters": {
+    "ledger_kernel": {
+      "main": "canisters/ledger_kernel/src/Main.mo",
+      "type": "motoko"
+    }
+  },
+  "version": 1
+}

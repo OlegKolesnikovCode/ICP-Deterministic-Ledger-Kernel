@@ -15,7 +15,7 @@ Runs the local verification stack:
 - `python -B tools/source_validator/validate_all.py --sources sources --reports reports`
 - `python -B -m unittest discover -s tools/source_validator/tests`
 - every `scripts/check-*.ps1` script created for the pre-code harness
-- `dfx build` when `dfx.json` exists
+- `dfx build --check` when `dfx.json` exists
 - `git diff --check`
 
 The entrypoint is expected to run under WSL/Linux PowerShell with `pwsh -File ./scripts/verify.ps1` and under Windows PowerShell with `powershell -ExecutionPolicy Bypass -File scripts\verify.ps1`. The harness constructs repository paths with PowerShell path APIs or portable forward-slash paths, invokes child checks through the current PowerShell host, and runs Python unittest discovery directly without `cmd.exe`.
@@ -31,6 +31,7 @@ What it checks:
 What it cannot prove:
 
 - Runtime ledger correctness.
+- Local canister creation/deployment proof from `dfx build`; that belongs to a later runtime/deployment stage.
 - Upgrade safety.
 - Transfer executor atomicity beyond static no-await scanning.
 - Completeness of future tests before the matching implementation exists.

@@ -167,12 +167,12 @@ foreach ($script in $checkScripts) {
 
 $DfxJson = Join-RepoPath "dfx.json"
 if (Test-Path -LiteralPath $DfxJson) {
-    Invoke-VerificationStep "dfx build" {
-        & dfx build
+    Invoke-VerificationStep "dfx build --check" {
+        & dfx build --check
     }
 } else {
     Write-Output ""
-    Write-Output "== dfx build =="
+    Write-Output "== dfx build --check =="
     Write-Output "NOT_APPLICABLE: dfx.json does not exist in pre-code verification mode."
     Write-Output "RESULT: NOT_APPLICABLE"
     $NotApplicable += 1
