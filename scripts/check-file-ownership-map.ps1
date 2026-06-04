@@ -1,12 +1,12 @@
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = "Stop"
 
-$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-Set-Location $RepoRoot
+$RepoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+Set-Location -LiteralPath $RepoRoot
 
-$mapPath = "docs\IMPLEMENTATION_FILE_MAP.md"
+$mapPath = "docs/IMPLEMENTATION_FILE_MAP.md"
 if (-not (Test-Path -LiteralPath $mapPath)) {
-    Write-Output "FAIL: BLOCKING docs\IMPLEMENTATION_FILE_MAP.md is missing."
+    Write-Output "FAIL: BLOCKING docs/IMPLEMENTATION_FILE_MAP.md is missing."
     exit 1
 }
 
@@ -16,12 +16,17 @@ if ($mapContent -notmatch "\| File \| Phase \| Governed By \| May Import \| Must
     exit 1
 }
 
+function Convert-ToSlashPath {
+    param([string]$Path)
+    return $Path -replace "\\", "/"
+}
+
 $implementationFiles = @()
 foreach ($root in @("canisters", "src")) {
     if (Test-Path -LiteralPath $root) {
         $implementationFiles += Get-ChildItem -LiteralPath $root -Recurse -File | Where-Object {
-            $_.FullName -notmatch "\\node_modules\\" -and
-            $_.FullName -notmatch "\\.dfx\\" -and
+            (Convert-ToSlashPath $_.FullName) -notmatch "/node_modules/" -and
+            (Convert-ToSlashPath $_.FullName) -notmatch "/\.dfx/" -and
             $_.Extension -in @(".mo", ".did", ".rs", ".ts", ".js", ".mjs", ".cjs", ".json", ".toml")
         }
     }
@@ -48,7 +53,7 @@ foreach ($file in $implementationFiles) {
 }
 
 if ($missing.Count -gt 0) {
-    Write-Output "FAIL: BLOCKING implementation files missing from docs\IMPLEMENTATION_FILE_MAP.md."
+    Write-Output "FAIL: BLOCKING implementation files missing from docs/IMPLEMENTATION_FILE_MAP.md."
     $missing | ForEach-Object { Write-Output "UNMAPPED: $_" }
     exit 1
 }

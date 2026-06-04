@@ -1,35 +1,35 @@
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = "Stop"
 
-$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-Set-Location $RepoRoot
+$RepoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+Set-Location -LiteralPath $RepoRoot
 
 $requiredFiles = @(
-    "sources\gov\GOV-00__SOURCE_CONSTITUTION__GOVERNANCE__GLOBAL.jsonl",
-    "sources\src\SRC-INDEX__SOURCE_TRACEABILITY__LOOKUP_ROUTING.jsonl",
-    "sources\src\SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
-    "sources\src\SRC-01__CANISTER_AUTHORITY_MODEL__SOURCE__SYSTEM.jsonl",
-    "sources\src\SRC-02__DOMAIN_ENTITIES__SOURCE__SYSTEM.jsonl",
-    "sources\src\SRC-03__TRANSFER_OPERATION__SOURCE__SYSTEM.jsonl",
-    "sources\src\SRC-04__IDEMPOTENCY_REPLAY__SOURCE__SYSTEM.jsonl",
-    "sources\src\SRC-05__LEDGER_JOURNAL_INVARIANTS__SOURCE__SYSTEM.jsonl",
-    "sources\src\SRC-06__FAILURE_MODEL__SOURCE__SYSTEM.jsonl",
-    "sources\src\SRC-07__READ_MODEL_DERIVATION__SOURCE__SYSTEM.jsonl",
-    "sources\src\SRC-08__UPGRADE_SAFETY__SOURCE__SYSTEM.jsonl",
-    "sources\src\SRC-09__API_SURFACE_FORBIDDEN_APIS__SOURCE__SYSTEM.jsonl",
-    "sources\src\SRC-10__TEST_PROOF_REQUIREMENTS__SOURCE__SYSTEM.jsonl",
-    "sources\bld\BLD-INDEX__BUILD_TRACEABILITY__LOOKUP_ROUTING.jsonl",
-    "sources\bld\BLD-00__IMPLEMENTATION_IDENTITY__BUILD__GLOBAL.jsonl",
-    "sources\bld\BLD-01__CANISTER_AUTHORITY_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
-    "sources\bld\BLD-02__DOMAIN_MODEL_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
-    "sources\bld\BLD-03__TRANSFER_PIPELINE_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
-    "sources\bld\BLD-04__IDEMPOTENCY_REPLAY_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
-    "sources\bld\BLD-05__LEDGER_JOURNAL_COMMIT_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
-    "sources\bld\BLD-06__FAILURE_HANDLING_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
-    "sources\bld\BLD-07__READ_MODEL_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
-    "sources\bld\BLD-08__UPGRADE_SAFETY_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
-    "sources\bld\BLD-09__API_SURFACE_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
-    "sources\bld\BLD-10__TEST_PROOF_IMPLEMENTATION__BUILD__SYSTEM.jsonl"
+    "sources/gov/GOV-00__SOURCE_CONSTITUTION__GOVERNANCE__GLOBAL.jsonl",
+    "sources/src/SRC-INDEX__SOURCE_TRACEABILITY__LOOKUP_ROUTING.jsonl",
+    "sources/src/SRC-00__PROJECT_IDENTITY__SOURCE__GLOBAL.jsonl",
+    "sources/src/SRC-01__CANISTER_AUTHORITY_MODEL__SOURCE__SYSTEM.jsonl",
+    "sources/src/SRC-02__DOMAIN_ENTITIES__SOURCE__SYSTEM.jsonl",
+    "sources/src/SRC-03__TRANSFER_OPERATION__SOURCE__SYSTEM.jsonl",
+    "sources/src/SRC-04__IDEMPOTENCY_REPLAY__SOURCE__SYSTEM.jsonl",
+    "sources/src/SRC-05__LEDGER_JOURNAL_INVARIANTS__SOURCE__SYSTEM.jsonl",
+    "sources/src/SRC-06__FAILURE_MODEL__SOURCE__SYSTEM.jsonl",
+    "sources/src/SRC-07__READ_MODEL_DERIVATION__SOURCE__SYSTEM.jsonl",
+    "sources/src/SRC-08__UPGRADE_SAFETY__SOURCE__SYSTEM.jsonl",
+    "sources/src/SRC-09__API_SURFACE_FORBIDDEN_APIS__SOURCE__SYSTEM.jsonl",
+    "sources/src/SRC-10__TEST_PROOF_REQUIREMENTS__SOURCE__SYSTEM.jsonl",
+    "sources/bld/BLD-INDEX__BUILD_TRACEABILITY__LOOKUP_ROUTING.jsonl",
+    "sources/bld/BLD-00__IMPLEMENTATION_IDENTITY__BUILD__GLOBAL.jsonl",
+    "sources/bld/BLD-01__CANISTER_AUTHORITY_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources/bld/BLD-02__DOMAIN_MODEL_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources/bld/BLD-03__TRANSFER_PIPELINE_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources/bld/BLD-04__IDEMPOTENCY_REPLAY_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources/bld/BLD-05__LEDGER_JOURNAL_COMMIT_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources/bld/BLD-06__FAILURE_HANDLING_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources/bld/BLD-07__READ_MODEL_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources/bld/BLD-08__UPGRADE_SAFETY_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources/bld/BLD-09__API_SURFACE_IMPLEMENTATION__BUILD__SYSTEM.jsonl",
+    "sources/bld/BLD-10__TEST_PROOF_IMPLEMENTATION__BUILD__SYSTEM.jsonl"
 )
 
 $missing = @()
@@ -61,7 +61,7 @@ if ($missing.Count -gt 0 -or $inactive.Count -gt 0 -or $parseErrors.Count -gt 0)
     exit 1
 }
 
-$reportPath = "reports\validation-results.json"
+$reportPath = "reports/validation-results.json"
 if (Test-Path -LiteralPath $reportPath) {
     $report = Get-Content -Raw -LiteralPath $reportPath | ConvertFrom-Json
     $blocking = [int]$report.counts.blocking

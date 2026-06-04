@@ -10,13 +10,15 @@ These scripts are verification rails for later implementation phases. They are n
 
 Runs the local verification stack:
 
-- `python -B tools\source_validator\validate_src.py --sources sources --reports reports`
-- `python -B tools\source_validator\validate_bld.py --sources sources --reports reports`
-- `python -B tools\source_validator\validate_all.py --sources sources --reports reports`
-- `python -B -m unittest discover -s tools\source_validator\tests`
+- `python -B tools/source_validator/validate_src.py --sources sources --reports reports`
+- `python -B tools/source_validator/validate_bld.py --sources sources --reports reports`
+- `python -B tools/source_validator/validate_all.py --sources sources --reports reports`
+- `python -B -m unittest discover -s tools/source_validator/tests`
 - every `scripts/check-*.ps1` script created for the pre-code harness
 - `dfx build` when `dfx.json` exists
 - `git diff --check`
+
+The entrypoint is expected to run under WSL/Linux PowerShell with `pwsh -File ./scripts/verify.ps1` and under Windows PowerShell with `powershell -ExecutionPolicy Bypass -File scripts\verify.ps1`. The harness constructs repository paths with PowerShell path APIs or portable forward-slash paths, invokes child checks through the current PowerShell host, and runs Python unittest discovery directly without `cmd.exe`.
 
 What it checks:
 
@@ -24,6 +26,7 @@ What it checks:
 - Scripted scans are invoked through one command.
 - `WARNING_ONLY` validator status is reported without being collapsed into PASS.
 - `NOT_APPLICABLE` is allowed only for checks whose implementation target does not exist yet.
+- Command-not-found errors, parser errors, PowerShell script failures, and native command nonzero exits are blocking failures unless the step explicitly returns the known validator `WARNING_ONLY` status.
 
 What it cannot prove:
 

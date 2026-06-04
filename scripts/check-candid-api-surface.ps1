@@ -1,8 +1,8 @@
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = "Stop"
 
-$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-Set-Location $RepoRoot
+$RepoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+Set-Location -LiteralPath $RepoRoot
 
 $apiFiles = @()
 foreach ($root in @("canisters", "src")) {

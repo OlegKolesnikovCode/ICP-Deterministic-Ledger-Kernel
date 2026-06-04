@@ -1,13 +1,45 @@
 Set-StrictMode -Version 2.0
-$ErrorActionPreference = "Continue"
+$ErrorActionPreference = "Stop"
 
-$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-Set-Location $RepoRoot
+$RepoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+Set-Location -LiteralPath $RepoRoot
 
 $Failures = 0
 $Warnings = 0
 $NotApplicable = 0
 $Passed = 0
+
+function Join-RepoPath {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$Parts
+    )
+
+    $path = $RepoRoot
+    foreach ($part in $Parts) {
+        $path = Join-Path -Path $path -ChildPath $part
+    }
+    return $path
+}
+
+function Test-WindowsHost {
+    return $PSVersionTable.PSEdition -eq "Desktop" -or [System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT
+}
+
+function Get-PowerShellExecutable {
+    $currentProcess = Get-Process -Id $PID
+    if ($currentProcess.Path) {
+        return $currentProcess.Path
+    }
+
+    $commandName = "pwsh"
+    if (Test-WindowsHost) {
+        $commandName = "powershell"
+    }
+
+    $command = Get-Command $commandName -ErrorAction Stop
+    return $command.Source
+}
 
 function Invoke-VerificationStep {
     param(
@@ -19,15 +51,30 @@ function Invoke-VerificationStep {
     Write-Output ""
     Write-Output "== $Name =="
     $global:LASTEXITCODE = 0
-    $rawOutput = & $Command 2>&1
-    $exitCode = $LASTEXITCODE
+    $commandFailed = $false
+    $rawOutput = @()
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = "Continue"
+        $rawOutput = & $Command 2>&1
+        $exitCode = $LASTEXITCODE
+    } catch {
+        $commandFailed = $true
+        $exitCode = 1
+        $rawOutput = @($_)
+    } finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
     $output = @()
     foreach ($item in $rawOutput) {
         if ($item -is [System.Management.Automation.ErrorRecord]) {
-            if ($item.Exception.Message) {
+            $message = $item.ToString()
+            if ($message) {
+                $output += $message
+            } elseif ($item.Exception.Message) {
                 $output += $item.Exception.Message
             } else {
-                $output += $item.ToString()
+                $output += $item.FullyQualifiedErrorId
             }
         } else {
             $output += $item.ToString()
@@ -38,7 +85,9 @@ function Invoke-VerificationStep {
         Write-Output $text
     }
 
-    if ($exitCode -ne 0) {
+    $hasBlockingPowerShellError = $text -match "CommandNotFoundException|ParserError|The term '.+' is not recognized|not recognized as the name of a cmdlet|not recognized as a name of a cmdlet"
+
+    if ($commandFailed -or $hasBlockingPowerShellError -or $exitCode -ne 0) {
         if ($AllowWarningOnly -and $text -match "WARNING_ONLY") {
             Write-Output "RESULT: WARNING_ONLY"
             $script:Warnings += 1
@@ -71,39 +120,53 @@ function Invoke-VerificationStep {
     $script:Passed += 1
 }
 
+$ValidateSrc = Join-RepoPath "tools" "source_validator" "validate_src.py"
+$ValidateBld = Join-RepoPath "tools" "source_validator" "validate_bld.py"
+$ValidateAll = Join-RepoPath "tools" "source_validator" "validate_all.py"
+$SourcesDir = "sources"
+$ReportsDir = "reports"
+$SourceValidatorTests = Join-RepoPath "tools" "source_validator" "tests"
+$PowerShellExecutable = Get-PowerShellExecutable
+
 Invoke-VerificationStep "validate_src" {
-    & python -B tools\source_validator\validate_src.py --sources sources --reports reports
+    & python -B $ValidateSrc --sources $SourcesDir --reports $ReportsDir
 } -AllowWarningOnly
 
 Invoke-VerificationStep "validate_bld" {
-    & python -B tools\source_validator\validate_bld.py --sources sources --reports reports
+    & python -B $ValidateBld --sources $SourcesDir --reports $ReportsDir
 } -AllowWarningOnly
 
 Invoke-VerificationStep "validate_all" {
-    & python -B tools\source_validator\validate_all.py --sources sources --reports reports
+    & python -B $ValidateAll --sources $SourcesDir --reports $ReportsDir
 } -AllowWarningOnly
 
 Invoke-VerificationStep "source_validator_unittests" {
-    & cmd /c "python -B -m unittest discover -s tools\source_validator\tests 2>&1"
+    & python -B -m unittest discover -s $SourceValidatorTests
 }
 
 $checkScripts = @(
-    "scripts\check-authority-trace.ps1",
-    "scripts\check-forbidden-api.ps1",
-    "scripts\check-forbidden-internal-patterns.ps1",
-    "scripts\check-no-await-consistency-boundary.ps1",
-    "scripts\check-candid-api-surface.ps1",
-    "scripts\check-file-ownership-map.ps1",
-    "scripts\check-module-test-coverage.ps1"
+    @{ Name = "scripts/check-authority-trace.ps1"; Path = (Join-RepoPath "scripts" "check-authority-trace.ps1") },
+    @{ Name = "scripts/check-forbidden-api.ps1"; Path = (Join-RepoPath "scripts" "check-forbidden-api.ps1") },
+    @{ Name = "scripts/check-forbidden-internal-patterns.ps1"; Path = (Join-RepoPath "scripts" "check-forbidden-internal-patterns.ps1") },
+    @{ Name = "scripts/check-no-await-consistency-boundary.ps1"; Path = (Join-RepoPath "scripts" "check-no-await-consistency-boundary.ps1") },
+    @{ Name = "scripts/check-candid-api-surface.ps1"; Path = (Join-RepoPath "scripts" "check-candid-api-surface.ps1") },
+    @{ Name = "scripts/check-file-ownership-map.ps1"; Path = (Join-RepoPath "scripts" "check-file-ownership-map.ps1") },
+    @{ Name = "scripts/check-module-test-coverage.ps1"; Path = (Join-RepoPath "scripts" "check-module-test-coverage.ps1") }
 )
 
 foreach ($script in $checkScripts) {
-    Invoke-VerificationStep $script {
-        & powershell -NoProfile -ExecutionPolicy Bypass -File $script
+    Invoke-VerificationStep $script.Name {
+        $arguments = @("-NoProfile")
+        if (Test-WindowsHost) {
+            $arguments += @("-ExecutionPolicy", "Bypass")
+        }
+        $arguments += @("-File", $script.Path)
+        & $PowerShellExecutable @arguments
     } -AllowWarningOnly
 }
 
-if (Test-Path -LiteralPath "dfx.json") {
+$DfxJson = Join-RepoPath "dfx.json"
+if (Test-Path -LiteralPath $DfxJson) {
     Invoke-VerificationStep "dfx build" {
         & dfx build
     }

@@ -1,16 +1,21 @@
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = "Stop"
 
-$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-Set-Location $RepoRoot
+$RepoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+Set-Location -LiteralPath $RepoRoot
+
+function Convert-ToSlashPath {
+    param([string]$Path)
+    return $Path -replace "\\", "/"
+}
 
 function Get-ImplementationFiles {
     $files = @()
     foreach ($root in @("canisters", "src")) {
         if (Test-Path -LiteralPath $root) {
             $files += Get-ChildItem -LiteralPath $root -Recurse -File | Where-Object {
-                $_.FullName -notmatch "\\node_modules\\" -and
-                $_.FullName -notmatch "\\.dfx\\" -and
+                (Convert-ToSlashPath $_.FullName) -notmatch "/node_modules/" -and
+                (Convert-ToSlashPath $_.FullName) -notmatch "/\.dfx/" -and
                 $_.Extension -in @(".mo", ".did", ".rs", ".ts", ".js", ".mjs", ".cjs")
             }
         }
@@ -42,7 +47,7 @@ if ($publicApiFiles.Count -gt 0) {
 }
 
 $balanceMutationPattern = "\b(putBalance|setBalance|overwriteBalance|mintBalance|debitBalance|creditBalance)\b|balances\.(put|set|delete)|balances\s*:="
-$balanceFiles = $implementationFiles | Where-Object { $_.FullName -notmatch "\\balances\\" -and $_.Name -notmatch "BalanceControl|TransferExecutor" }
+$balanceFiles = $implementationFiles | Where-Object { (Convert-ToSlashPath $_.FullName) -notmatch "/balances/" -and $_.Name -notmatch "BalanceControl|TransferExecutor" }
 if ($balanceFiles.Count -gt 0) {
     $balanceMatches = Select-String -LiteralPath ($balanceFiles.FullName) -Pattern $balanceMutationPattern -CaseSensitive:$false
     foreach ($match in $balanceMatches) {
@@ -51,7 +56,7 @@ if ($balanceFiles.Count -gt 0) {
 }
 
 $ledgerMutationPattern = "\b(appendLedger|createLedgerEntry|rewriteLedgerEntry|deleteLedgerEntry|rewriteJournal)\b|ledgerEntries\.(put|set|delete)"
-$ledgerFiles = $implementationFiles | Where-Object { $_.FullName -notmatch "\\ledger\\" -and $_.Name -notmatch "LedgerJournal|TransferExecutor" }
+$ledgerFiles = $implementationFiles | Where-Object { (Convert-ToSlashPath $_.FullName) -notmatch "/ledger/" -and $_.Name -notmatch "LedgerJournal|TransferExecutor" }
 if ($ledgerFiles.Count -gt 0) {
     $ledgerMatches = Select-String -LiteralPath ($ledgerFiles.FullName) -Pattern $ledgerMutationPattern -CaseSensitive:$false
     foreach ($match in $ledgerMatches) {

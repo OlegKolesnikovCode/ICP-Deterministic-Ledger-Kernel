@@ -1,15 +1,20 @@
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = "Stop"
 
-$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-Set-Location $RepoRoot
+$RepoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+Set-Location -LiteralPath $RepoRoot
+
+function Convert-ToSlashPath {
+    param([string]$Path)
+    return $Path -replace "\\", "/"
+}
 
 $candidateFiles = @()
 foreach ($root in @("canisters", "src")) {
     if (Test-Path -LiteralPath $root) {
         $candidateFiles += Get-ChildItem -LiteralPath $root -Recurse -File | Where-Object {
             $_.Extension -in @(".mo", ".rs", ".ts", ".js") -and
-            ($_.Name -match "TransferExecutor|ConsistencyBoundary" -or $_.FullName -match "\\transfer\\")
+            ($_.Name -match "TransferExecutor|ConsistencyBoundary" -or (Convert-ToSlashPath $_.FullName) -match "/transfer/")
         }
     }
 }

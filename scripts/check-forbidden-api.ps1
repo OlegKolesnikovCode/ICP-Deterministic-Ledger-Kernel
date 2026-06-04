@@ -1,16 +1,21 @@
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = "Stop"
 
-$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-Set-Location $RepoRoot
+$RepoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+Set-Location -LiteralPath $RepoRoot
+
+function Convert-ToSlashPath {
+    param([string]$Path)
+    return $Path -replace "\\", "/"
+}
 
 function Get-ImplementationFiles {
     $files = @()
     foreach ($root in @("canisters", "src")) {
         if (Test-Path -LiteralPath $root) {
             $files += Get-ChildItem -LiteralPath $root -Recurse -File | Where-Object {
-                $_.FullName -notmatch "\\node_modules\\" -and
-                $_.FullName -notmatch "\\.dfx\\" -and
+                (Convert-ToSlashPath $_.FullName) -notmatch "/node_modules/" -and
+                (Convert-ToSlashPath $_.FullName) -notmatch "/\.dfx/" -and
                 $_.Extension -in @(".mo", ".did", ".rs", ".ts", ".js", ".mjs", ".cjs")
             }
         }
